@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:app_update_checker_bottom_sheet/app_update_checker_bottom_sheet.dart';
+import 'package:update_checker_bottom_sheet/update_checker_bottom_sheet.dart';
 
 void main() {
   test('adds one to input values', () {

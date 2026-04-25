@@ -1,4 +1,4 @@
-name: app_update_checker_bottom_sheet
+name: update_checker_bottom_sheet
 description: "Flutter package to check app version update, download and install from Github releases through a bottomsheet widget"
 version: 0.0.1
 homepage:
