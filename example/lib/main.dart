@@ -52,22 +52,38 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isChecking = false;
 
-  Future<void> _checkForUpdates() async {
+  Future<void> _checkForUpdates(bool showIfUpToDate) async {
     setState(() {
       _isChecking = true;
     });
 
     final updateFound = await UpdateCheckerBottomSheet.checkAndUpdate(
       context,
-      config: const UpdateCheckerConfig(
-        githubRepo:
-            "jydv402/ZenUnni", // Using Memno's repo to test actual Github Releases
-        // Optional: Custom colors
-        // bottomSheetColors: UpdateBottomSheetColors(
-        //   backgroundColor: Color(0xFF121212),
-        //   accentColor: Colors.deepPurpleAccent,
-        //   pillColor: Color(0xFF1E1E1E),
-        // ),
+      showIfUpToDate: showIfUpToDate,
+      config: UpdateCheckerConfig(
+        githubRepo: "jydv402/ZenUnni",
+        bottomSheetColors: const UpdateBottomSheetColors(
+          backgroundColor: Color(0xFF0F0F0F),
+          accentColor: Colors.deepPurpleAccent,
+          pillColor: Color(0xFF1A1A1A),
+        ),
+        bottomSheetStyles: UpdateBottomSheetStyles(
+          borderRadius: 40,
+          buttonBorderRadius: 15,
+          padding: const EdgeInsets.fromLTRB(30, 40, 30, 40),
+          updateIcon: Icons.cloud_download_rounded,
+          upToDateIcon: Icons.verified_rounded,
+          titleStyle: const TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w900,
+            color: Colors.white,
+            letterSpacing: -0.5,
+          ),
+          buttonTextStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.1,
+          ),
+        ),
       ),
     );
 
@@ -75,7 +91,7 @@ class _HomePageState extends State<HomePage> {
       _isChecking = false;
     });
 
-    if (!updateFound && mounted) {
+    if (!updateFound && mounted && !showIfUpToDate) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No updates found! You are on the latest version.'),
@@ -116,9 +132,9 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 32),
             ElevatedButton(
-              onPressed: _isChecking ? null : _checkForUpdates,
+              onPressed: _isChecking ? null : () => _checkForUpdates(false),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: Colors.deepPurpleAccent,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 16,
@@ -144,6 +160,25 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.white,
                       ),
                     ),
+            ),
+            const SizedBox(height: 16),
+            OutlinedButton(
+              onPressed: _isChecking ? null : () => _checkForUpdates(true),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.deepPurpleAccent,
+                side: const BorderSide(color: Colors.deepPurpleAccent),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: const Text(
+                'Force Show Bottom Sheet',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),
