@@ -23,6 +23,10 @@ class UpdateCheckerBottomSheet {
     if (!Platform.isAndroid) return false;
 
     final updateLogic = UpdateLogic(config);
+    
+    // Clean up any old APK files from previous runs to save space
+    await updateLogic.cleanupUpdateFiles();
+
     final updateData = await updateLogic.checkLatestVersionInfo();
 
     if (updateData == null) return false;
