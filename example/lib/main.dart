@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
       context,
       showIfUpToDate: showIfUpToDate,
       config: UpdateCheckerConfig(
-        githubRepo: "jydv402/ZenUnni",
+        githubRepo: "jydv402/memno",
         bottomSheetColors: const UpdateBottomSheetColors(
           backgroundColor: Color(0xFF0F0F0F),
           accentColor: Colors.deepPurpleAccent,
