@@ -1,25 +1,55 @@
 # Update Checker Bottom Sheet
 
-A Flutter package to easily check for app updates via GitHub Releases and present a beautiful, customizable bottom sheet to the user to download and install the update.
+[![Pub Version](https://img.shields.io/pub/v/update_checker_bottom_sheet?color=blue)](https://pub.dev/packages/update_checker_bottom_sheet)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
+A premium, highly customizable Flutter package to seamlessly check for app updates via **GitHub Releases**. It provides a beautiful, user-friendly bottom sheet that handles version comparison, OTA downloading, and installation on Android.
 
-- **Plug & Play**: Automated Android configuration (Manifest & FileProvider).
-- **GitHub Integrated**: Fetches latest release, version, and notes from GitHub API.
-- **Beautiful UI**: Modern, dark-themed bottom sheet with progress indicator.
-- **OTA Updates**: Handles downloading and initiating APK installation automatically.
-- **Customizable**: Override colors to match your brand.
+---
 
-## Getting started
+## 📌 Index
+- [Features](#-features)
+- [Installation](#-installation)
+- [Android Setup](#-android-setup)
+- [Usage](#-usage)
+- [Customization](#-customization)
+- [GitHub Release Best Practices (Important)](#-github-release-best-practices-important)
+- [Note on Versioning (Important)](#-note-on-versioning-important)
+- [License](#-license)
 
-### Android Setup
+---
 
-This package handles most of the Android configuration for you. You only need to enable **Core Library Desugaring** in your app's Gradle file.
+## ✨ Features
 
-1. Open `android/app/build.gradle` (or `build.gradle.kts`).
-2. Add the following to your `compileOptions` and `dependencies`:
+- **Android Native Support**: Built specifically for Android with 100% compatibility for current build systems.
+- **OTA Updates**: Handles the full lifecycle—fetching, downloading, and triggering the Android Package Installer.
+- **GitHub Integration**: Automatically parses latest release tags, changelogs, and APK assets.
+- **Architecture Awareness**: Intelligently detects device ABI (`arm64-v8a`, `armeabi-v7a`, `x86_64`) and selects the matching APK.
+- **"Up to Date" Notification**: Optionally show a success UI if no update is found.
 
-**Kotlin DSL (`build.gradle.kts`)**:
+---
+
+## 📦 Installation
+
+Add this package to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  update_checker_bottom_sheet:
+    git:
+      url: https://github.com/jdmakes/update_checker_bottom_sheet.git
+```
+
+---
+
+## 🛠️ Android Setup
+
+This package is designed for maximum simplicity. The only manual requirement is enabling **Core Library Desugaring**.
+
+### 1. Enable Desugaring
+The underlying OTA engine requires desugaring to support older Android versions.
+
+**`android/app/build.gradle` (or `build.gradle.kts`)**:
 ```kotlin
 android {
     compileOptions {
@@ -34,9 +64,18 @@ dependencies {
 }
 ```
 
-## Usage
+### 2. Permissions
+The package automatically bundles the necessary permissions:
+- `INTERNET`
+- `REQUEST_INSTALL_PACKAGES`
+- `READ_EXTERNAL_STORAGE` / `WRITE_EXTERNAL_STORAGE`
 
-Integrating the update checker is now extremely simple:
+---
+
+## 📖 Usage
+
+### Simple Check
+Automatically checks GitHub and shows the sheet only if an update is found.
 
 ```dart
 import 'package:update_checker_bottom_sheet/update_checker_bottom_sheet.dart';
@@ -45,25 +84,60 @@ void _checkForUpdates() async {
   await UpdateCheckerBottomSheet.checkAndUpdate(
     context,
     config: const UpdateCheckerConfig(
-      githubRepo: "your_username/your_repo", // e.g. "jydv402/ZenUnni"
-      
-      // Optional: Custom colors
-      bottomSheetColors: UpdateBottomSheetColors(
-        backgroundColor: Color(0xFF121212),
-        accentColor: Colors.deepPurpleAccent,
-      ),
+      githubRepo: "username/repo", // e.g. "jydv402/ZenUnni"
     ),
   );
 }
 ```
 
-### Optional: ProGuard Rules
-If you use R8/ProGuard, you might need to keep the `ota_update` classes:
-```proguard
--keep class sk.fourq.otaupdate.** { *; }
+### Force "Up to Date" UI
+Useful for "Check for Updates" buttons in a Settings menu.
+
+```dart
+await UpdateCheckerBottomSheet.checkAndUpdate(
+  context,
+  showIfUpToDate: true, // Shows "You are using the latest version" if no update
+  config: const UpdateCheckerConfig(githubRepo: "username/repo"),
+);
 ```
 
-## How it works
-- **Version Check**: The package compares your current `pubspec` version with the latest GitHub release tag (expected format: `v1.0.0` or `1.0.0`).
-- **File Sharing**: Uses a bundled `FileProvider` with authority `${applicationId}.update_checker_bottom_sheet.provider`.
-- **Permissions**: Automatically includes `INTERNET` and `REQUEST_INSTALL_PACKAGES` via the plugin manifest.
+---
+
+## 🎨 Customization
+
+We believe in deep customization. You can control every pixel, color, and string used in the bottom sheet.
+
+👉 **[View the Full Customization Guide](./CUSTOMIZATION.md)**
+
+---
+
+## 🤖 GitHub Release Best Practices (IMPORTANT)
+
+> [!IMPORTANT]
+> To ensure the package correctly identifies and downloads your APKs, follow these guidelines when creating a GitHub Release:
+
+1.  **ABI Naming**: The package looks for ABI names in the asset filenames. If your release has multiple APKs, name them like so:
+    - `app-arm64-v8a-release.apk`
+    - `app-armeabi-v7a-release.apk`
+    - `app-x86_64-release.apk`
+2.  **Split per ABI**: Use `flutter build apk --split-per-abi` to generate these files automatically.
+3.  **Fallback Support**: If no ABI-specific match is found, the package will fallback to assets named `universal.apk` or `app-release.apk`.
+4.  **Changelog**: The text in the GitHub Release "Description" field is automatically pulled and displayed as the "What's New" content.
+
+---
+
+## 📝 Note on Versioning (IMPORTANT)
+
+> [!IMPORTANT]
+> Version comparison is the core of this package. Here is how it works:
+
+- **Semantic Versioning**: It compares your local version (from `pubspec.yaml`) with the **GitHub Release Tag**.
+- **Build Numbers**: It supports and compares build numbers (e.g., `1.2.0+5` is recognized as newer than `1.2.0+4`).
+- **Tag Formatting**: It gracefully handles `v` prefixes (e.g., Tag `v1.0.0` matches Version `1.0.0`).
+- **Pre-releases**: Ensure your tags follow standard semantic versioning for predictable results.
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
