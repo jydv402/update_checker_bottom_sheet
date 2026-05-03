@@ -24,7 +24,7 @@ A simple and customizable Flutter package to check for app updates via **GitHub 
 
 | Update Available | Downloading | Installing |
 | :---: | :---: | :---: |
-| ![Update Available](assets/screenshots/update_available.png) | ![Downloading](assets/screenshots/downloading.png) | ![Installing](assets/screenshots/installing.png) |
+| ![Update Available](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/assets/screenshots/update_available.png) | ![Downloading](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/assets/screenshots/downloading.png) | ![Installing](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/assets/screenshots/installing.png) |
 
 ## ✨ Features
 
@@ -42,7 +42,7 @@ Add this package to your `pubspec.yaml` via **pub.dev**:
 
 ```yaml
 dependencies:
-  update_checker_bottom_sheet: ^0.0.2
+  update_checker_bottom_sheet: ^0.0.3
 ```
 
 Or install it directly from **GitHub**:
@@ -118,7 +118,7 @@ await UpdateCheckerBottomSheet.checkAndUpdate(
 ### ⚠️ Important: Cleaning Up Old APK Files
 The `checkAndUpdate` function automatically cleans up old APK files from previous downloads to save storage space on the user's device. This ensures a smooth user experience without cluttering the device with temporary files.
 
-👉 **[View the Sample Implementation](IMPLEMENTATION.md)**
+👉 **[View the Sample Implementation](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/IMPLEMENTATION.md)**
 
 ---
 
@@ -126,7 +126,7 @@ The `checkAndUpdate` function automatically cleans up old APK files from previou
 
 We believe in deep customization. You can control every pixel, color, and string used in the bottom sheet.
 
-👉 **[View the Full Customization Guide](./CUSTOMIZATION.md)**
+👉 **[View the Full Customization Guide](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/CUSTOMIZATION.md)**
 
 ---
 
@@ -159,4 +159,4 @@ We believe in deep customization. You can control every pixel, color, and string
 
 ## 📜 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/LICENSE) file for details.
