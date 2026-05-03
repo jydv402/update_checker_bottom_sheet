@@ -38,13 +38,20 @@ A simple and customizable Flutter package to check for app updates via **GitHub 
 
 ## 📦 Installation
 
-Add this package to your `pubspec.yaml`:
+Add this package to your `pubspec.yaml` via **pub.dev**:
+
+```yaml
+dependencies:
+  update_checker_bottom_sheet: ^0.0.2
+```
+
+Or install it directly from **GitHub**:
 
 ```yaml
 dependencies:
   update_checker_bottom_sheet:
     git:
-      url: https://github.com/jdmakes/update_checker_bottom_sheet.git
+      url: https://github.com/jydv402/update_checker_bottom_sheet.git
 ```
 
 ---
