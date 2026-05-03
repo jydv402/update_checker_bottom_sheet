@@ -13,7 +13,8 @@ class UpdateLogic {
   final UpdateCheckerConfig config;
 
   static const String githubApiBase = "https://api.github.com/repos";
-  static const String defaultProviderSuffix = ".update_checker_bottom_sheet.provider";
+  static const String defaultProviderSuffix =
+      ".update_checker_bottom_sheet.provider";
 
   UpdateLogic(this.config);
 
@@ -66,7 +67,8 @@ class UpdateLogic {
   /// Triggers an OTA update using the provided [url].
   Stream<OtaEvent> startOtaUpdate(String url) {
     return Stream.fromFuture(PackageInfo.fromPlatform()).asyncExpand((info) {
-      final authority = config.androidProviderAuthority ??
+      final authority =
+          config.androidProviderAuthority ??
           "${info.packageName}$defaultProviderSuffix";
       return OtaUpdate().execute(url, androidProviderAuthority: authority);
     });
@@ -97,8 +99,8 @@ class UpdateLogic {
 
       return {
         'isUpdateAvailable': isUpdateAvailable,
-        'latestVersion': latestVerWithTag.startsWith('v') 
-            ? latestVerWithTag.substring(1) 
+        'latestVersion': latestVerWithTag.startsWith('v')
+            ? latestVerWithTag.substring(1)
             : latestVerWithTag,
         'currentVersion': info.version,
         'url': getDownloadUrlForDevice(release),

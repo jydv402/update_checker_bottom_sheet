@@ -54,59 +54,61 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
 
     try {
       if (widget.downloadUrl == null) return;
-      _otaSubscription = _updateLogic.startOtaUpdate(widget.downloadUrl!).listen(
-        (OtaEvent event) {
-          setState(() {
-            switch (event.status) {
-              case OtaStatus.DOWNLOADING:
-                _progress = double.tryParse(event.value ?? "0") ?? 0;
-                _statusMessage =
-                    "${strings.downloadingPrefix}: ${_progress.toInt()}%";
-                break;
-              case OtaStatus.INSTALLING:
-                _statusMessage = strings.installingUpdate;
-                break;
-              case OtaStatus.INSTALLATION_DONE:
-                _statusMessage = strings.updateInstalled;
+      _otaSubscription = _updateLogic
+          .startOtaUpdate(widget.downloadUrl!)
+          .listen(
+            (OtaEvent event) {
+              setState(() {
+                switch (event.status) {
+                  case OtaStatus.DOWNLOADING:
+                    _progress = double.tryParse(event.value ?? "0") ?? 0;
+                    _statusMessage =
+                        "${strings.downloadingPrefix}: ${_progress.toInt()}%";
+                    break;
+                  case OtaStatus.INSTALLING:
+                    _statusMessage = strings.installingUpdate;
+                    break;
+                  case OtaStatus.INSTALLATION_DONE:
+                    _statusMessage = strings.updateInstalled;
+                    _isDownloading = false;
+                    break;
+                  case OtaStatus.INSTALLATION_ERROR:
+                    _statusMessage = strings.installationFailed;
+                    _isDownloading = false;
+                    break;
+                  case OtaStatus.CHECKSUM_ERROR:
+                    _statusMessage = strings.checksumError;
+                    _isDownloading = false;
+                    break;
+                  case OtaStatus.PERMISSION_NOT_GRANTED_ERROR:
+                    _statusMessage = strings.permissionDenied;
+                    _isDownloading = false;
+                    break;
+                  case OtaStatus.INTERNAL_ERROR:
+                    _statusMessage = strings.internalError;
+                    _isDownloading = false;
+                    break;
+                  case OtaStatus.DOWNLOAD_ERROR:
+                    _statusMessage = strings.downloadError;
+                    _isDownloading = false;
+                    break;
+                  case OtaStatus.ALREADY_RUNNING_ERROR:
+                    _statusMessage = strings.alreadyRunningError;
+                    break;
+                  default:
+                    _statusMessage = strings.unknownError;
+                    _isDownloading = false;
+                    break;
+                }
+              });
+            },
+            onError: (e) {
+              setState(() {
+                _statusMessage = "${strings.downloadError}: $e";
                 _isDownloading = false;
-                break;
-              case OtaStatus.INSTALLATION_ERROR:
-                _statusMessage = strings.installationFailed;
-                _isDownloading = false;
-                break;
-              case OtaStatus.CHECKSUM_ERROR:
-                _statusMessage = strings.checksumError;
-                _isDownloading = false;
-                break;
-              case OtaStatus.PERMISSION_NOT_GRANTED_ERROR:
-                _statusMessage = strings.permissionDenied;
-                _isDownloading = false;
-                break;
-              case OtaStatus.INTERNAL_ERROR:
-                _statusMessage = strings.internalError;
-                _isDownloading = false;
-                break;
-              case OtaStatus.DOWNLOAD_ERROR:
-                _statusMessage = strings.downloadError;
-                _isDownloading = false;
-                break;
-              case OtaStatus.ALREADY_RUNNING_ERROR:
-                _statusMessage = strings.alreadyRunningError;
-                break;
-              default:
-                _statusMessage = strings.unknownError;
-                _isDownloading = false;
-                break;
-            }
-          });
-        },
-        onError: (e) {
-          setState(() {
-            _statusMessage = "${strings.downloadError}: $e";
-            _isDownloading = false;
-          });
-        },
-      );
+              });
+            },
+          );
     } catch (e) {
       setState(() {
         _statusMessage = "${strings.internalError}: $e";
@@ -127,7 +129,9 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(widget.config.bottomSheetStrings.updateCancelled)),
+          SnackBar(
+            content: Text(widget.config.bottomSheetStrings.updateCancelled),
+          ),
         );
       }
     } catch (e) {
@@ -137,7 +141,10 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = _ResolvedColors.resolve(context, widget.config.bottomSheetColors);
+    final colors = _ResolvedColors.resolve(
+      context,
+      widget.config.bottomSheetColors,
+    );
     final styles = widget.config.bottomSheetStyles;
     final strings = widget.config.bottomSheetStrings;
 
@@ -145,7 +152,9 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
       padding: styles.padding,
       decoration: BoxDecoration(
         color: colors.backgroundColor,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(styles.borderRadius)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(styles.borderRadius),
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -213,7 +222,8 @@ class _HeaderSection extends StatelessWidget {
           children: [
             Text(
               isUpToDate ? strings.upToDateTitle : strings.updateAvailableTitle,
-              style: styles.titleStyle ??
+              style:
+                  styles.titleStyle ??
                   TextStyle(
                     color: colors.textColor,
                     fontSize: 24,
@@ -224,7 +234,8 @@ class _HeaderSection extends StatelessWidget {
               isUpToDate
                   ? strings.upToDateMessage
                   : "${strings.versionPrefix} $latestVersion",
-              style: styles.versionStyle ??
+              style:
+                  styles.versionStyle ??
                   TextStyle(color: colors.secondaryTextColor, fontSize: 16),
             ),
           ],
@@ -265,7 +276,8 @@ class _ReleaseNotesSection extends StatelessWidget {
       children: [
         Text(
           strings.whatsNewLabel,
-          style: styles.whatsNewStyle ??
+          style:
+              styles.whatsNewStyle ??
               TextStyle(
                 color: colors.textColor,
                 fontSize: 18,
@@ -284,7 +296,8 @@ class _ReleaseNotesSection extends StatelessWidget {
           child: SingleChildScrollView(
             child: Text(
               releaseNotes,
-              style: styles.contentStyle ??
+              style:
+                  styles.contentStyle ??
                   TextStyle(color: colors.textColor, fontSize: 14),
             ),
           ),
@@ -327,16 +340,14 @@ class _ProgressSection extends StatelessWidget {
             Expanded(
               child: Text(
                 statusMessage,
-                style: styles.contentStyle ??
+                style:
+                    styles.contentStyle ??
                     TextStyle(color: colors.textColor, fontSize: 14),
               ),
             ),
             TextButton(
               onPressed: onCancel,
-              child: const Text(
-                "Cancel",
-                style: TextStyle(color: Colors.red),
-              ),
+              child: const Text("Cancel", style: TextStyle(color: Colors.red)),
             ),
           ],
         ),
@@ -378,7 +389,8 @@ class _ActionsSection extends StatelessWidget {
           ),
           child: Text(
             strings.okayButton,
-            style: styles.buttonTextStyle ??
+            style:
+                styles.buttonTextStyle ??
                 const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -399,7 +411,8 @@ class _ActionsSection extends StatelessWidget {
             ),
             child: Text(
               strings.notNowButton,
-              style: styles.buttonTextStyle ?? TextStyle(color: colors.textColor),
+              style:
+                  styles.buttonTextStyle ?? TextStyle(color: colors.textColor),
             ),
           ),
         ),
@@ -418,7 +431,8 @@ class _ActionsSection extends StatelessWidget {
             ),
             child: Text(
               strings.updateNowButton,
-              style: styles.buttonTextStyle ??
+              style:
+                  styles.buttonTextStyle ??
                   const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -447,17 +461,23 @@ class _ResolvedColors {
     required this.boxColor,
   });
 
-  factory _ResolvedColors.resolve(BuildContext context, UpdateBottomSheetColors custom) {
+  factory _ResolvedColors.resolve(
+    BuildContext context,
+    UpdateBottomSheetColors custom,
+  ) {
     final theme = Theme.of(context);
-    final txtColor = custom.textColor ?? theme.textTheme.bodyLarge?.color ?? Colors.black;
+    final txtColor =
+        custom.textColor ?? theme.textTheme.bodyLarge?.color ?? Colors.black;
 
     return _ResolvedColors(
       backgroundColor: custom.backgroundColor ?? theme.canvasColor,
       textColor: txtColor,
-      secondaryTextColor: custom.secondaryTextColor ?? txtColor.withValues(alpha: 0.6),
+      secondaryTextColor:
+          custom.secondaryTextColor ?? txtColor.withValues(alpha: 0.6),
       accentColor: custom.accentColor ?? theme.primaryColor,
       accentTextColor: custom.accentTextColor ?? theme.colorScheme.onPrimary,
-      pillColor: custom.pillColor ??
+      pillColor:
+          custom.pillColor ??
           theme.dialogTheme.backgroundColor ??
           theme.colorScheme.surfaceContainerHigh,
       boxColor: custom.boxColor ?? theme.dividerColor,
