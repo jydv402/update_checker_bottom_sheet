@@ -8,6 +8,7 @@ A premium, highly customizable Flutter package to seamlessly check for app updat
 ---
 
 ## 📌 Index
+- [Screenshots](#-screenshots)
 - [Features](#-features)
 - [Installation](#-installation)
 - [Android Setup](#-android-setup)
@@ -18,6 +19,12 @@ A premium, highly customizable Flutter package to seamlessly check for app updat
 - [License](#-license)
 
 ---
+
+## 📸 Screenshots
+
+| Update Available | Downloading | Installing |
+| :---: | :---: | :---: |
+| ![Update Available](assets/screenshots/update_available.png) | ![Downloading](assets/screenshots/downloading.png) | ![Installing](assets/screenshots/installing.png) |
 
 ## ✨ Features
 
