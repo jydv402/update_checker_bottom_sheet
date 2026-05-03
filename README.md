@@ -101,6 +101,11 @@ await UpdateCheckerBottomSheet.checkAndUpdate(
 );
 ```
 
+### ⚠️ Important: Cleaning Up Old APK Files
+The `checkAndUpdate` function automatically cleans up old APK files from previous downloads to save storage space on the user's device. This ensures a smooth user experience without cluttering the device with temporary files.
+
+👉 **[View the Sample Implementation](IMPLEMENTATION.md)**
+
 ---
 
 ## 🎨 Customization
