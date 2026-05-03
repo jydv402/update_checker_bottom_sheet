@@ -3,7 +3,7 @@
 [![Pub Version](https://img.shields.io/pub/v/update_checker_bottom_sheet?color=blue)](https://pub.dev/packages/update_checker_bottom_sheet)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A premium, highly customizable Flutter package to seamlessly check for app updates via **GitHub Releases**. It provides a beautiful, user-friendly bottom sheet that handles version comparison, OTA downloading, and installation on Android.
+A simple and customizable Flutter package to check for app updates via **GitHub Releases**. It provides a beautiful, user-friendly bottom sheet that handles version comparison, OTA downloading, and installation on Android.
 
 ---
 
