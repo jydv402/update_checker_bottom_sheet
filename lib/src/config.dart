@@ -7,15 +7,16 @@ class UpdateCheckerConfig {
   final String githubRepo;
 
   /// The Android Provider Authority used by ota_update.
-  /// Example: "com.jdmakes.memno.ota_update_provider"
-  final String androidProviderAuthority;
+  /// If null, it defaults to "[packageName].update_checker_bottom_sheet.provider"
+  /// using the bundled FileProvider configuration.
+  final String? androidProviderAuthority;
 
   /// Optional custom colors for the bottom sheet UI.
   final UpdateBottomSheetColors? bottomSheetColors;
 
   const UpdateCheckerConfig({
     required this.githubRepo,
-    required this.androidProviderAuthority,
+    this.androidProviderAuthority,
     this.bottomSheetColors,
   });
 }

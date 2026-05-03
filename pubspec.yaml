@@ -25,6 +25,12 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.jdmakes.update_checker_bottom_sheet
+        pluginClass: UpdateCheckerBottomSheetPlugin
+
 
   # To add assets to your package, add an assets section, like this:
   # assets:

@@ -110,14 +110,18 @@ class UpdateLogic {
   /// Triggers an OTA update using the provided [url].
   /// Returns a Stream of OtaEvent containing the download progress and status.
   Stream<OtaEvent> startOtaUpdate(String url) {
-    try {
-      return OtaUpdate().execute(
-        url,
-        androidProviderAuthority: config.androidProviderAuthority,
-      );
-    } catch (e) {
-      rethrow;
-    }
+    return Stream.fromFuture(PackageInfo.fromPlatform()).asyncExpand((info) {
+      try {
+        final authority = config.androidProviderAuthority ??
+            "${info.packageName}.update_checker_bottom_sheet.provider";
+        return OtaUpdate().execute(
+          url,
+          androidProviderAuthority: authority,
+        );
+      } catch (e) {
+        rethrow;
+      }
+    });
   }
 
   /// High-level check for updates.

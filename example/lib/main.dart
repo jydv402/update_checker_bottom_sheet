@@ -10,7 +10,7 @@ void main() {
   PackageInfo.setMockInitialValues(
     appName: 'Example App',
     packageName: 'com.example.example',
-    version: '0.0.1',
+    version: '1.0.0',
     buildNumber: '1',
     buildSignature: 'mock_signature',
   );
@@ -61,8 +61,7 @@ class _HomePageState extends State<HomePage> {
       context,
       config: const UpdateCheckerConfig(
         githubRepo:
-            "jydv402/memno", // Using Memno's repo to test actual Github Releases
-        androidProviderAuthority: "com.example.example.ota_update_provider",
+            "jydv402/ZenUnni", // Using Memno's repo to test actual Github Releases
         // Optional: Custom colors
         // bottomSheetColors: UpdateBottomSheetColors(
         //   backgroundColor: Color(0xFF121212),
@@ -103,9 +102,17 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white54,
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Current Mock Version: 0.0.1',
-              style: TextStyle(fontSize: 18, color: Colors.white70),
+            FutureBuilder<PackageInfo>(
+              future: PackageInfo.fromPlatform(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    'Current Mock Version: ${snapshot.data?.version}',
+                    style: const TextStyle(fontSize: 18, color: Colors.white70),
+                  );
+                }
+                return const CircularProgressIndicator(color: Colors.white);
+              },
             ),
             const SizedBox(height: 32),
             ElevatedButton(
