@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -17,13 +15,13 @@ class UpdateCheckerBottomSheet {
   static Future<bool> checkAndUpdate(
     BuildContext context, {
     required UpdateCheckerConfig config,
-    bool showIfUpToDate = false,
+    bool showIfUpToDate = true,
   }) async {
     // This package only supports Android
     if (!Platform.isAndroid) return false;
 
     final updateLogic = UpdateLogic(config);
-    
+
     // Clean up any old APK files from previous runs to save space
     await updateLogic.cleanupUpdateFiles();
 
