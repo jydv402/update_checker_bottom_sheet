@@ -19,14 +19,27 @@ A simple and customizable Flutter package to check for app updates via **GitHub 
 - [License](#-license)
 
 ---
-
 ## 📸 Screenshots
 
 | Update Available | Downloading | Installing |
 | :---: | :---: | :---: |
-| ![Update Available](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/assets/screenshots/update_available.png) | ![Downloading](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/assets/screenshots/downloading.png) | ![Installing](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/assets/screenshots/installing.png) |
+| ![Update Available](https://raw.githubusercontent.com/jydv402/update_checker_bottom_sheet/main/assets/screenshots/update_available.png) | ![Downloading](https://raw.githubusercontent.com/jydv402/update_checker_bottom_sheet/main/assets/screenshots/downloading.png) | ![Installing](https://raw.githubusercontent.com/jydv402/update_checker_bottom_sheet/main/assets/screenshots/installing.png) |
+
+## 📱 Supported Platforms
+
+- ✅ Android
+- ❌ iOS
+- ❌ Web
+- ❌ macOS
+- ❌ Windows
+- ❌ Linux
+
+Currently, this package is designed **exclusively for Android**. 
+
+The underlying OTA (Over-The-Air) engine utilizes Android's `FileProvider` and Package Installer to handle APK downloads and installation. Support for other platforms (iOS, Windows, etc.) is not planned for the immediate future due to the specific requirements of OTA distribution on those systems.
 
 ## ✨ Features
+
 
 - **Android Native Support**: Built specifically for Android with 100% compatibility for current build systems.
 - **OTA Updates**: Handles the full lifecycle—fetching, downloading, and triggering the Android Package Installer.
@@ -98,7 +111,7 @@ void _checkForUpdates() async {
   await UpdateCheckerBottomSheet.checkAndUpdate(
     context,
     config: const UpdateCheckerConfig(
-      githubRepo: "username/repo", // e.g. "jydv402/ZenUnni"
+      githubRepo: "username/repo", // e.g. "jydv402/memno"
     ),
   );
 }

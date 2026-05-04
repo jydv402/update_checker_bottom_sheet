@@ -7,11 +7,23 @@ import 'src/update_bottom_sheet.dart';
 
 export 'src/config.dart';
 
-/// A class that provides the ability to check for updates and display a bottom sheet
+/// The main entry point for the Update Checker Bottom Sheet package.
+///
+/// This class provides a simple static method to check for app updates
+/// hosted on GitHub Releases and display a premium bottom sheet interface.
 class UpdateCheckerBottomSheet {
-  /// Checks for an update based on the provided [config] and displays the bottom sheet if an update is available.
-  /// If [showIfUpToDate] is true, it also shows the bottom sheet if the app is already on the latest version.
-  /// Returns true if the bottom sheet was shown, false otherwise.
+  /// Orchestrates the update check process and displays the UI if needed.
+  ///
+  /// [context] is required to show the [showModalBottomSheet].
+  /// [config] contains all settings including the target GitHub repository.
+  /// [showIfUpToDate] determines if the bottom sheet should be shown even
+  /// when the app is already on the latest version (useful for manual checks).
+  ///
+  /// Returns `true` if the bottom sheet was actually displayed, and `false`
+  /// if the check was skipped or failed.
+  ///
+  /// **Note**: This method returns immediately if called on platforms other
+  /// than Android, as OTA updates are currently only supported for Android.
   static Future<bool> checkAndUpdate(
     BuildContext context, {
     required UpdateCheckerConfig config,

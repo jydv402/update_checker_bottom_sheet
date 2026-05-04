@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
-/// Configuration for the Update Checker
+/// Configuration for the Update Checker.
+///
+/// This class centralizes all the settings required to check for updates,
+/// including the GitHub repository, custom UI colors, styles, and localized strings.
 class UpdateCheckerConfig {
   /// The GitHub repository to check for releases.
   /// Example: "jydv402/memno"
   final String githubRepo;
 
   /// The Android Provider Authority used by ota_update.
+  ///
   /// If null, it defaults to "[packageName].update_checker_bottom_sheet.provider"
-  /// using the bundled FileProvider configuration.
+  /// using the bundled FileProvider configuration in this package.
   final String? androidProviderAuthority;
 
   /// Optional custom colors for the bottom sheet UI.
@@ -20,6 +24,7 @@ class UpdateCheckerConfig {
   /// Optional custom strings for the bottom sheet UI (localization).
   final UpdateBottomSheetStrings bottomSheetStrings;
 
+  /// Creates a configuration for the update checker.
   const UpdateCheckerConfig({
     required this.githubRepo,
     this.androidProviderAuthority,
@@ -29,30 +34,33 @@ class UpdateCheckerConfig {
   });
 }
 
-/// Custom colors for the Update Bottom Sheet.
-/// If values are null, they will fall back to theme defaults in the UI.
+/// Custom colors for the Update Bottom Sheet UI.
+///
+/// If values are null, they will automatically fall back to the app's
+/// current [ThemeData] defaults.
 class UpdateBottomSheetColors {
-  /// Background color of the bottom sheet
+  /// Background color of the bottom sheet itself.
   final Color? backgroundColor;
 
-  /// Primary text color
+  /// Primary text color for titles and descriptions.
   final Color? textColor;
 
-  /// Secondary/Subtext color
+  /// Secondary text color for sub-titles and metadata.
   final Color? secondaryTextColor;
 
-  /// Accent color used for progress bar, icons, and primary buttons
+  /// Accent color used for the progress bar, action icons, and primary buttons.
   final Color? accentColor;
 
-  /// Text color on top of the accent color (e.g. text on primary button)
+  /// Text color used on top of the accent color (e.g., text on the primary action button).
   final Color? accentTextColor;
 
-  /// Background color for the release notes pill/box
+  /// Background color for the release notes pill/box container.
   final Color? pillColor;
 
-  /// Background color for the progress bar track
+  /// Background color for the progress bar track.
   final Color? boxColor;
 
+  /// Creates a set of custom colors for the bottom sheet.
   const UpdateBottomSheetColors({
     this.backgroundColor,
     this.textColor,
@@ -64,39 +72,46 @@ class UpdateBottomSheetColors {
   });
 }
 
-/// Custom styles for the Update Bottom Sheet
+/// Custom visual styles for the Update Bottom Sheet.
+///
+/// Allows fine-tuning the layout, icons, and typography of the update interface.
 class UpdateBottomSheetStyles {
-  /// Icon to show when an update is available. Default: [Icons.system_update_alt_rounded]
+  /// Icon to show when a new update is available.
+  /// Default: [Icons.system_update_alt_rounded]
   final IconData updateIcon;
 
-  /// Icon to show when the app is up to date. Default: [Icons.check_circle_outline_rounded]
+  /// Icon to show when the app is already up to date.
+  /// Default: [Icons.check_circle_outline_rounded]
   final IconData upToDateIcon;
 
-  /// Radius of the top corners of the bottom sheet. Default: 35
+  /// Corner radius of the top edges of the bottom sheet.
+  /// Default: 35.0
   final double borderRadius;
 
-  /// Padding around the content of the bottom sheet.
+  /// Inner padding around the entire content of the bottom sheet.
   /// Default: [EdgeInsets.fromLTRB(24, 32, 24, 32)]
   final EdgeInsets padding;
 
-  /// Radius of the buttons (Update Now, Not Now, Okay). Default: 50
+  /// Corner radius for all action buttons (Update Now, Not Now, Okay).
+  /// Default: 50.0
   final double buttonBorderRadius;
 
-  /// Custom text style for the main title.
+  /// Custom text style for the main header title.
   final TextStyle? titleStyle;
 
-  /// Custom text style for the version number/status sub-title.
+  /// Custom text style for the version number or status sub-header.
   final TextStyle? versionStyle;
 
-  /// Custom text style for the "What's New" label.
+  /// Custom text style for the "What's New" label above release notes.
   final TextStyle? whatsNewStyle;
 
-  /// Custom text style for the release notes content.
+  /// Custom text style for the actual release notes content.
   final TextStyle? contentStyle;
 
-  /// Custom text style for the buttons.
+  /// Custom text style for the button labels.
   final TextStyle? buttonTextStyle;
 
+  /// Creates a set of custom styles for the bottom sheet.
   const UpdateBottomSheetStyles({
     this.updateIcon = Icons.system_update_alt_rounded,
     this.upToDateIcon = Icons.check_circle_outline_rounded,
@@ -111,30 +126,75 @@ class UpdateBottomSheetStyles {
   });
 }
 
-/// Custom strings for the Update Bottom Sheet (Localization support)
+/// Custom strings for the Update Bottom Sheet (Localization support).
+///
+/// Use this class to translate the UI into other languages or to
+/// personalize the messages shown to the user.
 class UpdateBottomSheetStrings {
+  /// Title shown when an update is found. Default: "Update Available"
   final String updateAvailableTitle;
+
+  /// Title shown when no update is found. Default: "Up to Date"
   final String upToDateTitle;
+
+  /// Text prefixed to the version number. Default: "Version"
   final String versionPrefix;
+
+  /// Message shown when the app is already on the latest version.
   final String upToDateMessage;
+
+  /// Label for the release notes section. Default: "What's New:"
   final String whatsNewLabel;
+
+  /// Label for the negative action button. Default: "Not Now"
   final String notNowButton;
+
+  /// Label for the positive action button. Default: "Update Now"
   final String updateNowButton;
+
+  /// Label for the confirmation button. Default: "Okay"
   final String okayButton;
+
+  /// Status text when the file is ready to be downloaded.
   final String readyToDownload;
+
+  /// Status text when the download is being initialized.
   final String startingDownload;
+
+  /// Text shown while downloading, usually followed by a percentage.
   final String downloadingPrefix;
+
+  /// Status text when the APK is being sent to the system installer.
   final String installingUpdate;
+
+  /// Status text when installation was successfully triggered.
   final String updateInstalled;
+
+  /// Error message when the system installer fails.
   final String installationFailed;
+
+  /// Error message for file integrity issues.
   final String checksumError;
+
+  /// Error message when storage or install permissions are missing.
   final String permissionDenied;
+
+  /// Error message for general internal exceptions.
   final String internalError;
+
+  /// Error message when the network request fails.
   final String downloadError;
+
+  /// Error message when another update process is already active.
   final String alreadyRunningError;
+
+  /// Generic fallback error message.
   final String unknownError;
+
+  /// Message shown if the user cancels the download process.
   final String updateCancelled;
 
+  /// Creates a localized set of strings for the UI.
   const UpdateBottomSheetStrings({
     this.updateAvailableTitle = "Update Available",
     this.upToDateTitle = "Up to Date",

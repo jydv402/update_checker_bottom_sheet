@@ -1,8 +1,11 @@
 import 'dart:io';
 
+/// Utility class for version comparison and architecture detection.
 class UpdateUtils {
   /// Compares semantic versions.
+  ///
   /// Returns true if [latest] is newer than [current] with [buildNumber].
+  /// Supports both 'v1.0.0' and '1.0.0' formats.
   static bool isNewerVersion(
     String latest,
     String current,
@@ -45,7 +48,12 @@ class UpdateUtils {
     }
   }
 
-  /// Detects the device CPU architecture and maps it to standard APK ABI names.
+  /// Detects the device CPU architecture and maps it to standard Android APK ABI names.
+  ///
+  /// Supported mappings:
+  /// - aarch64/arm64 -> 'arm64-v8a'
+  /// - arm -> 'armeabi-v7a'
+  /// - x86_64/amd64 -> 'x86_64'
   static String getDeviceArch() {
     final machine = _getMachineArch();
 
@@ -60,6 +68,7 @@ class UpdateUtils {
     return 'arm64-v8a';
   }
 
+  /// Internal helper to get the raw machine architecture using 'uname -m'.
   static String _getMachineArch() {
     try {
       if (Platform.isAndroid) {

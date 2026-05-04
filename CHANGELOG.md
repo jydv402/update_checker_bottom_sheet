@@ -1,3 +1,23 @@
+## 0.0.4
+
+* **Android-Only Support**: Updated `README.md` and `pubspec.yaml` to reflect that the package is designed exclusively for Android.
+* **Documentation Improvements**: Enhanced `README.md` with:
+    *   clearer platform support statement.
+    * A new "Supported Platforms" section detailing the Android-only nature and reason.
+    * A "Sample Implementation" link for easy integration guidance.
+* **Internal Updates**: Improved internal documentation with comprehensive `dartdoc` comments for all public and internal classes.
+* **Metadata Refinement**: Updated `pubspec.yaml` metadata for better pub.dev analysis and clarity.
+
+## 0.0.3
+
+* Updated dependencies and improved metadata for pub.dev.
+* Fixed issue where APK selection might fail on certain build variants.
+
+## 0.0.2
+
+* Added support for automated APK cleanup after updates.
+* Enhanced customization options for icons and text styles.
+
 ## 0.0.1
 
 * Initial release.
