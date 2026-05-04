@@ -6,13 +6,11 @@ homepage: https://github.com/jydv402/update_checker_bottom_sheet
 issue_tracker: https://github.com/jydv402/update_checker_bottom_sheet/issues
 
 topics:
-  - updates
+  - update
   - bottom-sheet
   - ota
   - android
   - github
-  - release
-  - apk
 
 screenshots:
   - description: "Update Available screen"
