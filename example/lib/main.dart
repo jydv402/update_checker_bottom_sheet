@@ -117,10 +117,7 @@ class _HomePageState extends State<HomePage> {
             color: Colors.white,
           ),
           // Custom text style for the version/status text.
-          versionStyle: TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
-          ),
+          versionStyle: TextStyle(fontSize: 16, color: Colors.white70),
           // Custom text style for the "What's New" label.
           whatsNewStyle: TextStyle(
             fontSize: 18,
@@ -134,10 +131,7 @@ class _HomePageState extends State<HomePage> {
             height: 1.5,
           ),
           // Custom text style for the buttons.
-          buttonTextStyle: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          buttonTextStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         // Define all custom strings for localization or personalization.
         bottomSheetStrings: const UpdateBottomSheetStrings(

@@ -82,8 +82,9 @@ class UpdateUtils {
   /// Checks if the device has an active internet connection by looking up 'github.com'.
   static Future<bool> hasInternet() async {
     try {
-      final result = await InternetAddress.lookup('github.com')
-          .timeout(const Duration(seconds: 5));
+      final result = await InternetAddress.lookup(
+        'github.com',
+      ).timeout(const Duration(seconds: 5));
       return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
     } catch (_) {
       return false;
