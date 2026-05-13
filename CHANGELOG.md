@@ -1,3 +1,9 @@
+# 0.0.5
+
+* **Internet availability check**: Added native logic for checking if the device has internet connectivity before checking for updates.
+* **No internet UI**: Added a new bottom sheet UI for displaying a no internet message when the device has no internet connectivity.
+* **Internal updates**: Improved internal documentation with comprehensive `dartdoc` comments for all public and internal classes.
+
 ## 0.0.4
 
 * **Android-Only Support**: Updated `README.md` and `pubspec.yaml` to reflect that the package is designed exclusively for Android.
