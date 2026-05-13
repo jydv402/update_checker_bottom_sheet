@@ -8,7 +8,7 @@
 
 * **Android-Only Support**: Updated `README.md` and `pubspec.yaml` to reflect that the package is designed exclusively for Android.
 * **Documentation Improvements**: Enhanced `README.md` with:
-    *   clearer platform support statement.
+    * A clearer platform support statement.
     * A new "Supported Platforms" section detailing the Android-only nature and reason.
     * A "Sample Implementation" link for easy integration guidance.
 * **Internal Updates**: Improved internal documentation with comprehensive `dartdoc` comments for all public and internal classes.
