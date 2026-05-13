@@ -25,6 +25,12 @@ class UpdateCheckerConfig {
   final UpdateBottomSheetStrings bottomSheetStrings;
 
   /// Creates a configuration for the update checker.
+  ///
+  /// [githubRepo] is the GitHub repository to check for releases (e.g., "jydv402/memno").
+  /// [androidProviderAuthority] is the optional custom authority for the FileProvider.
+  /// [bottomSheetColors] defines the custom colors for the UI components.
+  /// [bottomSheetStyles] defines the custom shapes, icons, and text styles.
+  /// [bottomSheetStrings] defines the localized text and messages shown to the user.
   const UpdateCheckerConfig({
     required this.githubRepo,
     this.androidProviderAuthority,
@@ -60,7 +66,21 @@ class UpdateBottomSheetColors {
   /// Background color for the progress bar track.
   final Color? boxColor;
 
+  /// Color of the top handle/grabber.
+  final Color? handleColor;
+
+  /// Color of the border around the bottom sheet.
+  final Color? borderColor;
+
   /// Creates a set of custom colors for the bottom sheet.
+  ///
+  /// [backgroundColor] sets the background of the entire bottom sheet.
+  /// [textColor] sets the primary text color (titles, descriptions).
+  /// [secondaryTextColor] sets the secondary text color (sub-headers, metadata).
+  /// [accentColor] sets the color for icons, progress bars, and primary buttons.
+  /// [accentTextColor] sets the color of text/icons displayed on top of [accentColor].
+  /// [pillColor] sets the background color for the release notes container.
+  /// [boxColor] sets the background color for the progress bar track.
   const UpdateBottomSheetColors({
     this.backgroundColor,
     this.textColor,
@@ -69,6 +89,8 @@ class UpdateBottomSheetColors {
     this.accentTextColor,
     this.pillColor,
     this.boxColor,
+    this.handleColor,
+    this.borderColor,
   });
 }
 
@@ -108,10 +130,40 @@ class UpdateBottomSheetStyles {
   /// Custom text style for the actual release notes content.
   final TextStyle? contentStyle;
 
-  /// Custom text style for the button labels.
+  /// Custom text style for the buttons.
   final TextStyle? buttonTextStyle;
 
+  /// Icon to show when the internet is not available. Default: [Icons.wifi_off_rounded]
+  final IconData noInternetIcon;
+
+  /// Whether to show the top handle/grabber. Default: true
+  final bool showHandle;
+
+  /// Custom color for the handle. Falls back to secondary text color if null.
+  final Color? handleColor;
+
+  /// Whether to show a border around the bottom sheet. Default: false
+  final bool showBorder;
+
+  /// Custom color for the border. Falls back to divider color if null.
+  final Color? borderColor;
+
+  /// Width of the border. Default: 1.0
+  final double borderWidth;
+
   /// Creates a set of custom styles for the bottom sheet.
+  ///
+  /// [updateIcon] is the icon shown when an update is available.
+  /// [upToDateIcon] is the icon shown when the app is up to date.
+  /// [borderRadius] is the corner radius of the bottom sheet top edges.
+  /// [padding] is the inner padding around the bottom sheet content.
+  /// [buttonBorderRadius] is the corner radius for all action buttons.
+  /// [titleStyle] is the custom text style for the main title.
+  /// [versionStyle] is the custom text style for the version sub-header.
+  /// [whatsNewStyle] is the custom text style for the "What's New" label.
+  /// [contentStyle] is the custom text style for the release notes and status messages.
+  /// [buttonTextStyle] is the custom text style for button labels.
+  /// [noInternetIcon] is the icon shown when the network is unavailable.
   const UpdateBottomSheetStyles({
     this.updateIcon = Icons.system_update_alt_rounded,
     this.upToDateIcon = Icons.check_circle_outline_rounded,
@@ -123,6 +175,12 @@ class UpdateBottomSheetStyles {
     this.whatsNewStyle,
     this.contentStyle,
     this.buttonTextStyle,
+    this.noInternetIcon = Icons.wifi_off_rounded,
+    this.showHandle = true,
+    this.handleColor,
+    this.showBorder = false,
+    this.borderColor,
+    this.borderWidth = 1.0,
   });
 }
 
@@ -194,7 +252,35 @@ class UpdateBottomSheetStrings {
   /// Message shown if the user cancels the download process.
   final String updateCancelled;
 
+  /// Title shown when the fetch fails due to internet. Default: "Unable to Fetch"
+  final String unableToFetchTitle;
+
+  /// Message shown when the internet is not available.
+  final String noInternetMessage;
+
   /// Creates a localized set of strings for the UI.
+  ///
+  /// [updateAvailableTitle] is the title for the update alert.
+  /// [upToDateTitle] is the title for the up-to-date alert.
+  /// [versionPrefix] is the text shown before the version number.
+  /// [upToDateMessage] is the message shown when no update is found.
+  /// [whatsNewLabel] is the label for the release notes section.
+  /// [notNowButton] is the text for the "cancel" button.
+  /// [updateNowButton] is the text for the "confirm" button.
+  /// [okayButton] is the text for the "dismiss" button.
+  /// [readyToDownload] is the status before starting the download.
+  /// [startingDownload] is the status when initializing the connection.
+  /// [downloadingPrefix] is the status during active download.
+  /// [installingUpdate] is the status when sending the file to the installer.
+  /// [updateInstalled] is the status after successful installation trigger.
+  /// [installationFailed] is the error message for installer failures.
+  /// [checksumError] is the error message for invalid file downloads.
+  /// [permissionDenied] is the error message for missing storage/install permissions.
+  /// [internalError] is the error message for general exceptions.
+  /// [downloadError] is the error message for network failures.
+  /// [alreadyRunningError] is the error message when another update is active.
+  /// [unknownError] is the error message for unhandled exceptions.
+  /// [updateCancelled] is the message shown when the user cancels.
   const UpdateBottomSheetStrings({
     this.updateAvailableTitle = "Update Available",
     this.upToDateTitle = "Up to Date",
@@ -217,5 +303,8 @@ class UpdateBottomSheetStrings {
     this.alreadyRunningError = "An update is already in progress.",
     this.unknownError = "Something went wrong.",
     this.updateCancelled = "Update cancelled",
+    this.unableToFetchTitle = "Unable to Fetch",
+    this.noInternetMessage =
+        "Please check your internet connection and try again.",
   });
 }

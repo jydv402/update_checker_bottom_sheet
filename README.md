@@ -55,16 +55,13 @@ Add this package to your `pubspec.yaml` via **pub.dev**:
 
 ```yaml
 dependencies:
-  update_checker_bottom_sheet: ^0.0.3
+  update_checker_bottom_sheet: ^0.0.5
 ```
 
-Or install it directly from **GitHub**:
+Or Run
 
-```yaml
-dependencies:
-  update_checker_bottom_sheet:
-    git:
-      url: https://github.com/jydv402/update_checker_bottom_sheet.git
+```bash
+flutter pub add update_checker_bottom_sheet
 ```
 
 ---

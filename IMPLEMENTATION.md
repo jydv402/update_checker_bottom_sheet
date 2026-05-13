@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _checkForUpdates() async {
     await UpdateCheckerBottomSheet.checkAndUpdate(
       context,
+      showIfUpToDate: false, // Set to false to hide the bottom sheet if there is no update. Else causes pop up to show in each app open.
       config: const UpdateCheckerConfig(
         githubRepo: "username/repo",
       ),

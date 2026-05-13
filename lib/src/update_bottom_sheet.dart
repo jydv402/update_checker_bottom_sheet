@@ -11,6 +11,7 @@ class UpdateBottomSheet extends StatefulWidget {
   final String? downloadUrl;
   final String releaseNotes;
   final bool isUpToDate;
+  final bool showNetworkError;
 
   const UpdateBottomSheet({
     super.key,
@@ -19,6 +20,7 @@ class UpdateBottomSheet extends StatefulWidget {
     this.downloadUrl,
     required this.releaseNotes,
     this.isUpToDate = false,
+    this.showNetworkError = false,
   });
 
   @override
@@ -149,9 +151,25 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
     final strings = widget.config.bottomSheetStrings;
 
     return Container(
-      padding: styles.padding,
+      //padding: styles.padding,
       decoration: BoxDecoration(
         color: colors.backgroundColor,
+        border: styles.showBorder
+            ? Border(
+                top: BorderSide(
+                  color: styles.borderColor ?? colors.boxColor,
+                  width: styles.borderWidth,
+                ),
+                left: BorderSide(
+                  color: styles.borderColor ?? colors.boxColor,
+                  width: styles.borderWidth,
+                ),
+                right: BorderSide(
+                  color: styles.borderColor ?? colors.boxColor,
+                  width: styles.borderWidth,
+                ),
+              )
+            : null,
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(styles.borderRadius),
         ),
@@ -160,37 +178,63 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _HeaderSection(
-            isUpToDate: widget.isUpToDate,
-            latestVersion: widget.latestVersion,
-            colors: colors,
-            styles: styles,
-            strings: strings,
-          ),
-          const SizedBox(height: 20),
-          _ReleaseNotesSection(
-            releaseNotes: widget.releaseNotes,
-            colors: colors,
-            styles: styles,
-            strings: strings,
-          ),
-          const SizedBox(height: 30),
-          if (_isDownloading)
-            _ProgressSection(
-              progress: _progress,
-              statusMessage: _statusMessage,
-              onCancel: _cancelDownload,
-              colors: colors,
-              styles: styles,
-            )
-          else
-            _ActionsSection(
-              isUpToDate: widget.isUpToDate,
-              onUpdate: _startDownload,
-              colors: colors,
-              styles: styles,
-              strings: strings,
+          // Handle
+          if (styles.showHandle) ...[
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 16),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: styles.handleColor ?? colors.secondaryTextColor,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
             ),
+          ],
+
+          // Main content
+          Padding(
+            padding: styles.padding,
+            child: Column(
+              children: [
+                _HeaderSection(
+                  isUpToDate: widget.isUpToDate,
+                  showNetworkError: widget.showNetworkError,
+                  latestVersion: widget.latestVersion,
+                  colors: colors,
+                  styles: styles,
+                  strings: strings,
+                ),
+                if (!widget.showNetworkError) ...[
+                  const SizedBox(height: 20),
+                  _ReleaseNotesSection(
+                    releaseNotes: widget.releaseNotes,
+                    colors: colors,
+                    styles: styles,
+                    strings: strings,
+                  ),
+                ],
+                const SizedBox(height: 30),
+                if (_isDownloading)
+                  _ProgressSection(
+                    progress: _progress,
+                    statusMessage: _statusMessage,
+                    onCancel: _cancelDownload,
+                    colors: colors,
+                    styles: styles,
+                  )
+                else
+                  _ActionsSection(
+                    isUpToDate: widget.isUpToDate || widget.showNetworkError,
+                    onUpdate: _startDownload,
+                    colors: colors,
+                    styles: styles,
+                    strings: strings,
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -199,6 +243,7 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
 
 class _HeaderSection extends StatelessWidget {
   final bool isUpToDate;
+  final bool showNetworkError;
   final String latestVersion;
   final _ResolvedColors colors;
   final UpdateBottomSheetStyles styles;
@@ -206,6 +251,7 @@ class _HeaderSection extends StatelessWidget {
 
   const _HeaderSection({
     required this.isUpToDate,
+    required this.showNetworkError,
     required this.latestVersion,
     required this.colors,
     required this.styles,
@@ -217,29 +263,38 @@ class _HeaderSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              isUpToDate ? strings.upToDateTitle : strings.updateAvailableTitle,
-              style:
-                  styles.titleStyle ??
-                  TextStyle(
-                    color: colors.textColor,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            Text(
-              isUpToDate
-                  ? strings.upToDateMessage
-                  : "${strings.versionPrefix} $latestVersion",
-              style:
-                  styles.versionStyle ??
-                  TextStyle(color: colors.secondaryTextColor, fontSize: 16),
-            ),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                showNetworkError
+                    ? strings.unableToFetchTitle
+                    : isUpToDate
+                    ? strings.upToDateTitle
+                    : strings.updateAvailableTitle,
+                style:
+                    styles.titleStyle ??
+                    TextStyle(
+                      color: colors.textColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              Text(
+                showNetworkError
+                    ? strings.noInternetMessage
+                    : isUpToDate
+                    ? strings.upToDateMessage
+                    : "${strings.versionPrefix} $latestVersion",
+                style:
+                    styles.versionStyle ??
+                    TextStyle(color: colors.secondaryTextColor, fontSize: 16),
+              ),
+            ],
+          ),
         ),
+        const SizedBox(width: 12),
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -247,7 +302,11 @@ class _HeaderSection extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Icon(
-            isUpToDate ? styles.upToDateIcon : styles.updateIcon,
+            showNetworkError
+                ? styles.noInternetIcon
+                : isUpToDate
+                ? styles.upToDateIcon
+                : styles.updateIcon,
             color: colors.accentTextColor,
           ),
         ),
