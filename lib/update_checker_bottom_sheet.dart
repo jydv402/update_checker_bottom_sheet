@@ -41,10 +41,11 @@ class UpdateCheckerBottomSheet {
     // Check for internet connectivity first
     final bool hasInternet = await UpdateUtils.hasInternet();
     if (!hasInternet) {
-      if (context.mounted) {
+      if (showIfUpToDate && context.mounted) {
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
+
           backgroundColor: Colors.transparent,
           builder: (context) => UpdateBottomSheet(
             config: config,

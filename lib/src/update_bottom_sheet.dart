@@ -147,25 +147,28 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
       context,
       widget.config.bottomSheetColors,
     );
-    final styles = widget.config.bottomSheetStyles;
+    final styles = _ResolvedStyles.resolve(
+      context,
+      widget.config.bottomSheetStyles,
+      colors,
+    );
     final strings = widget.config.bottomSheetStrings;
 
     return Container(
-      //padding: styles.padding,
       decoration: BoxDecoration(
         color: colors.backgroundColor,
         border: styles.showBorder
             ? Border(
                 top: BorderSide(
-                  color: styles.borderColor ?? colors.boxColor,
+                  color: colors.borderColor,
                   width: styles.borderWidth,
                 ),
                 left: BorderSide(
-                  color: styles.borderColor ?? colors.boxColor,
+                  color: colors.borderColor,
                   width: styles.borderWidth,
                 ),
                 right: BorderSide(
-                  color: styles.borderColor ?? colors.boxColor,
+                  color: colors.borderColor,
                   width: styles.borderWidth,
                 ),
               )
@@ -186,7 +189,7 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: styles.handleColor ?? colors.secondaryTextColor,
+                  color: colors.handleColor,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -246,7 +249,7 @@ class _HeaderSection extends StatelessWidget {
   final bool showNetworkError;
   final String latestVersion;
   final _ResolvedColors colors;
-  final UpdateBottomSheetStyles styles;
+  final _ResolvedStyles styles;
   final UpdateBottomSheetStrings strings;
 
   const _HeaderSection({
@@ -273,13 +276,7 @@ class _HeaderSection extends StatelessWidget {
                     : isUpToDate
                     ? strings.upToDateTitle
                     : strings.updateAvailableTitle,
-                style:
-                    styles.titleStyle ??
-                    TextStyle(
-                      color: colors.textColor,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: styles.titleStyle,
               ),
               Text(
                 showNetworkError
@@ -287,9 +284,7 @@ class _HeaderSection extends StatelessWidget {
                     : isUpToDate
                     ? strings.upToDateMessage
                     : "${strings.versionPrefix} $latestVersion",
-                style:
-                    styles.versionStyle ??
-                    TextStyle(color: colors.secondaryTextColor, fontSize: 16),
+                style: styles.versionStyle,
               ),
             ],
           ),
@@ -318,7 +313,7 @@ class _HeaderSection extends StatelessWidget {
 class _ReleaseNotesSection extends StatelessWidget {
   final String releaseNotes;
   final _ResolvedColors colors;
-  final UpdateBottomSheetStyles styles;
+  final _ResolvedStyles styles;
   final UpdateBottomSheetStrings strings;
 
   const _ReleaseNotesSection({
@@ -335,13 +330,7 @@ class _ReleaseNotesSection extends StatelessWidget {
       children: [
         Text(
           strings.whatsNewLabel,
-          style:
-              styles.whatsNewStyle ??
-              TextStyle(
-                color: colors.textColor,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
+          style: styles.whatsNewStyle,
         ),
         const SizedBox(height: 8),
         Container(
@@ -355,9 +344,7 @@ class _ReleaseNotesSection extends StatelessWidget {
           child: SingleChildScrollView(
             child: Text(
               releaseNotes,
-              style:
-                  styles.contentStyle ??
-                  TextStyle(color: colors.textColor, fontSize: 14),
+              style: styles.contentStyle,
             ),
           ),
         ),
@@ -371,7 +358,7 @@ class _ProgressSection extends StatelessWidget {
   final String statusMessage;
   final VoidCallback onCancel;
   final _ResolvedColors colors;
-  final UpdateBottomSheetStyles styles;
+  final _ResolvedStyles styles;
 
   const _ProgressSection({
     required this.progress,
@@ -399,9 +386,7 @@ class _ProgressSection extends StatelessWidget {
             Expanded(
               child: Text(
                 statusMessage,
-                style:
-                    styles.contentStyle ??
-                    TextStyle(color: colors.textColor, fontSize: 14),
+                style: styles.contentStyle,
               ),
             ),
             TextButton(
@@ -419,7 +404,7 @@ class _ActionsSection extends StatelessWidget {
   final bool isUpToDate;
   final VoidCallback onUpdate;
   final _ResolvedColors colors;
-  final UpdateBottomSheetStyles styles;
+  final _ResolvedStyles styles;
   final UpdateBottomSheetStrings strings;
 
   const _ActionsSection({
@@ -448,9 +433,7 @@ class _ActionsSection extends StatelessWidget {
           ),
           child: Text(
             strings.okayButton,
-            style:
-                styles.buttonTextStyle ??
-                const TextStyle(fontWeight: FontWeight.bold),
+            style: styles.primaryButtonTextStyle,
           ),
         ),
       );
@@ -470,8 +453,7 @@ class _ActionsSection extends StatelessWidget {
             ),
             child: Text(
               strings.notNowButton,
-              style:
-                  styles.buttonTextStyle ?? TextStyle(color: colors.textColor),
+              style: styles.secondaryButtonTextStyle,
             ),
           ),
         ),
@@ -490,9 +472,7 @@ class _ActionsSection extends StatelessWidget {
             ),
             child: Text(
               strings.updateNowButton,
-              style:
-                  styles.buttonTextStyle ??
-                  const TextStyle(fontWeight: FontWeight.bold),
+              style: styles.primaryButtonTextStyle,
             ),
           ),
         ),
@@ -509,6 +489,8 @@ class _ResolvedColors {
   final Color accentTextColor;
   final Color pillColor;
   final Color boxColor;
+  final Color handleColor;
+  final Color borderColor;
 
   _ResolvedColors({
     required this.backgroundColor,
@@ -518,6 +500,8 @@ class _ResolvedColors {
     required this.accentTextColor,
     required this.pillColor,
     required this.boxColor,
+    required this.handleColor,
+    required this.borderColor,
   });
 
   factory _ResolvedColors.resolve(
@@ -527,12 +511,13 @@ class _ResolvedColors {
     final theme = Theme.of(context);
     final txtColor =
         custom.textColor ?? theme.textTheme.bodyLarge?.color ?? Colors.black;
+    final secTextColor =
+        custom.secondaryTextColor ?? txtColor.withValues(alpha: 0.6);
 
     return _ResolvedColors(
       backgroundColor: custom.backgroundColor ?? theme.canvasColor,
       textColor: txtColor,
-      secondaryTextColor:
-          custom.secondaryTextColor ?? txtColor.withValues(alpha: 0.6),
+      secondaryTextColor: secTextColor,
       accentColor: custom.accentColor ?? theme.primaryColor,
       accentTextColor: custom.accentTextColor ?? theme.colorScheme.onPrimary,
       pillColor:
@@ -540,6 +525,92 @@ class _ResolvedColors {
           theme.dialogTheme.backgroundColor ??
           theme.colorScheme.surfaceContainerHigh,
       boxColor: custom.boxColor ?? theme.dividerColor,
+      handleColor: custom.handleColor ?? secTextColor,
+      borderColor: custom.borderColor ?? theme.dividerColor,
+    );
+  }
+}
+
+class _ResolvedStyles {
+  final IconData updateIcon;
+  final IconData upToDateIcon;
+  final double borderRadius;
+  final EdgeInsets padding;
+  final double buttonBorderRadius;
+  final TextStyle titleStyle;
+  final TextStyle versionStyle;
+  final TextStyle whatsNewStyle;
+  final TextStyle contentStyle;
+  final TextStyle primaryButtonTextStyle;
+  final TextStyle secondaryButtonTextStyle;
+  final IconData noInternetIcon;
+  final bool showHandle;
+  final bool showBorder;
+  final double borderWidth;
+
+  _ResolvedStyles({
+    required this.updateIcon,
+    required this.upToDateIcon,
+    required this.borderRadius,
+    required this.padding,
+    required this.buttonBorderRadius,
+    required this.titleStyle,
+    required this.versionStyle,
+    required this.whatsNewStyle,
+    required this.contentStyle,
+    required this.primaryButtonTextStyle,
+    required this.secondaryButtonTextStyle,
+    required this.noInternetIcon,
+    required this.showHandle,
+    required this.showBorder,
+    required this.borderWidth,
+  });
+
+  factory _ResolvedStyles.resolve(
+    BuildContext context,
+    UpdateBottomSheetStyles custom,
+    _ResolvedColors colors,
+  ) {
+    return _ResolvedStyles(
+      updateIcon: custom.updateIcon,
+      upToDateIcon: custom.upToDateIcon,
+      borderRadius: custom.borderRadius,
+      padding: custom.padding,
+      buttonBorderRadius: custom.buttonBorderRadius,
+      titleStyle: custom.titleStyle ??
+          TextStyle(
+            color: colors.textColor,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+      versionStyle: custom.versionStyle ??
+          TextStyle(
+            color: colors.secondaryTextColor,
+            fontSize: 16,
+          ),
+      whatsNewStyle: custom.whatsNewStyle ??
+          TextStyle(
+            color: colors.textColor,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+      contentStyle: custom.contentStyle ??
+          TextStyle(
+            color: colors.textColor,
+            fontSize: 14,
+          ),
+      primaryButtonTextStyle: custom.buttonTextStyle ??
+          const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+      secondaryButtonTextStyle: custom.buttonTextStyle ??
+          TextStyle(
+            color: colors.textColor,
+          ),
+      noInternetIcon: custom.noInternetIcon,
+      showHandle: custom.showHandle,
+      showBorder: custom.showBorder,
+      borderWidth: custom.borderWidth,
     );
   }
 }

@@ -139,14 +139,8 @@ class UpdateBottomSheetStyles {
   /// Whether to show the top handle/grabber. Default: true
   final bool showHandle;
 
-  /// Custom color for the handle. Falls back to secondary text color if null.
-  final Color? handleColor;
-
   /// Whether to show a border around the bottom sheet. Default: false
   final bool showBorder;
-
-  /// Custom color for the border. Falls back to divider color if null.
-  final Color? borderColor;
 
   /// Width of the border. Default: 1.0
   final double borderWidth;
@@ -177,9 +171,7 @@ class UpdateBottomSheetStyles {
     this.buttonTextStyle,
     this.noInternetIcon = Icons.wifi_off_rounded,
     this.showHandle = true,
-    this.handleColor,
     this.showBorder = false,
-    this.borderColor,
     this.borderWidth = 1.0,
   });
 }
