@@ -52,137 +52,88 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isChecking = false;
 
+  @override
+  void initState() {
+    super.initState();
+    // Check for updates automatically on startup
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkForUpdates(false);
+    });
+  }
+
   Future<void> _checkForUpdates(bool showIfUpToDate) async {
     setState(() {
       _isChecking = true;
     });
 
-    // We use the static checkAndUpdate method to trigger the process.
-    final updateFound = await UpdateCheckerBottomSheet.checkAndUpdate(
+    // We use the static check method to trigger the process.
+    final updateFound = await UpdateChecker.check(
       context,
+      githubRepo: "jydv402/memno",
       // Whether to show the bottom sheet even if the app is up to date.
       showIfUpToDate: showIfUpToDate,
-      // The main configuration object for the update checker.
-      config: UpdateCheckerConfig(
-        // The GitHub repository to check for releases (Required).
-        githubRepo: "jydv402/memno",
-        // Optional: Custom Android Provider Authority for OTA updates.
-        // If null, it defaults to [packageName].update_checker_bottom_sheet.provider
-        androidProviderAuthority: null,
-        // Define all custom colors for the UI.
-        bottomSheetColors: const UpdateBottomSheetColors(
-          // Background color of the bottom sheet itself.
-          backgroundColor: Color(0xFF0F0F0F),
-          // Primary text color for titles and descriptions.
-          textColor: Colors.white,
-          // Secondary text color for sub-titles and metadata.
-          secondaryTextColor: Colors.white70,
-          // Accent color for progress bars, icons, and primary buttons.
-          accentColor: Colors.deepPurpleAccent,
-          // Text color on top of the accent color.
-          accentTextColor: Colors.white,
-          // Background color for the release notes container.
-          pillColor: Color(0xFF1A1A1A),
-          // Background color for the progress bar track.
-          boxColor: Colors.white10,
-          // Custom color for the top grabber/handle.
-          handleColor: Colors.white30,
-          // Custom color for the bottom sheet border.
-          borderColor: Colors.white12,
-        ),
-        // Define all custom visual styles for the UI.
-        bottomSheetStyles: const UpdateBottomSheetStyles(
-          // Icon shown when an update is available.
-          updateIcon: Icons.cloud_download_rounded,
-          // Icon shown when the app is already up to date.
-          upToDateIcon: Icons.verified_rounded,
-          // Icon shown when no internet connection is detected.
-          noInternetIcon: Icons.wifi_off_rounded,
-          // Corner radius for the top edges of the bottom sheet.
-          borderRadius: 30,
-          // Corner radius for all buttons in the bottom sheet.
-          buttonBorderRadius: 16,
-          // Inner padding around the entire content.
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-          // Whether to show the top grabber/handle.
-          showHandle: true,
-          // Whether to show a border around the bottom sheet.
-          showBorder: true,
-          // Width of the border.
-          borderWidth: 1.5,
-          // Custom text style for the main title.
-          titleStyle: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-          // Custom text style for the version/status text.
-          versionStyle: TextStyle(fontSize: 16, color: Colors.white70),
-          // Custom text style for the "What's New" label.
-          whatsNewStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-          // Custom text style for the release notes content.
-          contentStyle: TextStyle(
-            fontSize: 14,
-            color: Colors.white,
-            height: 1.5,
-          ),
-          // Custom text style for the buttons.
-          buttonTextStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        // Define all custom strings for localization or personalization.
-        bottomSheetStrings: const UpdateBottomSheetStrings(
-          // Title when an update is found.
-          updateAvailableTitle: "New Version Available",
-          // Title when no update is found.
-          upToDateTitle: "You're All Set!",
-          // Prefix for the version number.
-          versionPrefix: "Build",
-          // Message when the app is on the latest version.
-          upToDateMessage: "You are already using the latest features.",
-          // Label for the release notes section.
-          whatsNewLabel: "Release Highlights:",
-          // Text for the "cancel" button.
-          notNowButton: "Later",
-          // Text for the "confirm" button.
-          updateNowButton: "Upgrade Now",
-          // Text for the "dismiss" button.
-          okayButton: "Got it",
-          // Status before download starts.
-          readyToDownload: "Connecting to server...",
-          // Status while initializing download.
-          startingDownload: "Fetching files...",
-          // Status prefix during active download.
-          downloadingPrefix: "Progress",
-          // Status when sending to system installer.
-          installingUpdate: "Preparing installation...",
-          // Status after successful trigger.
-          updateInstalled: "Ready to install.",
-          // Error: Installer failed.
-          installationFailed: "Failed to start installer.",
-          // Error: Checksum mismatch.
-          checksumError: "File integrity check failed.",
-          // Error: Permission missing.
-          permissionDenied: "Storage access is required.",
-          // Error: Internal exception.
-          internalError: "Something went wrong internally.",
-          // Error: Network failure.
-          downloadError: "Network connection lost.",
-          // Error: Update already in progress.
-          alreadyRunningError: "Another update is active.",
-          // Error: Generic fallback.
-          unknownError: "An unexpected error occurred.",
-          // Message when user cancels download.
-          updateCancelled: "Download paused/cancelled.",
-          // Title for internet connection errors.
-          unableToFetchTitle: "Check Connection",
-          // Message for internet connection errors.
-          noInternetMessage: "Please verify your internet and try again.",
-        ),
+      // Define all custom colors for the UI.
+      backgroundColor: const Color(0xFF0F0F0F),
+      textColor: Colors.white,
+      secondaryTextColor: Colors.white70,
+      accentColor: Colors.deepPurpleAccent,
+      accentTextColor: Colors.white,
+      pillColor: const Color(0xFF1A1A1A),
+      boxColor: Colors.white10,
+      handleColor: Colors.white30,
+      borderColor: Colors.white12,
+      updateIcon: Icons.cloud_download_rounded,
+      upToDateIcon: Icons.verified_rounded,
+      noInternetIcon: Icons.wifi_off_rounded,
+      borderRadius: 30,
+      buttonBorderRadius: 16,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+      showHandle: true,
+      showBorder: true,
+      borderWidth: 1.5,
+      titleStyle: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
       ),
+      versionStyle: const TextStyle(fontSize: 16, color: Colors.white70),
+      whatsNewStyle: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+      ),
+      contentStyle: const TextStyle(
+        fontSize: 14,
+        color: Colors.white,
+        height: 1.5,
+      ),
+      buttonTextStyle: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+      updateAvailableTitle: "New Version Available",
+      upToDateTitle: "You're All Set!",
+      versionPrefix: "Build",
+      upToDateMessage: "You are already using the latest features.",
+      whatsNewLabel: "Release Highlights:",
+      notNowButton: "Later",
+      updateNowButton: "Upgrade Now",
+      okayButton: "Got it",
+      readyToDownload: "Connecting to server...",
+      startingDownload: "Fetching files...",
+      downloadingPrefix: "Progress",
+      installingUpdate: "Preparing installation...",
+      updateInstalled: "Ready to install.",
+      installationFailed: "Failed to start installer.",
+      checksumError: "File integrity check failed.",
+      permissionDenied: "Storage access is required.",
+      internalError: "Something went wrong internally.",
+      downloadError: "Network connection lost.",
+      alreadyRunningError: "Another update is active.",
+      unknownError: "An unexpected error occurred.",
+      updateCancelled: "Download paused/cancelled.",
+      unableToFetchTitle: "Check Connection",
+      noInternetMessage: "Please verify your internet and try again.",
     );
 
     setState(() {
@@ -230,7 +181,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 32),
             ElevatedButton(
-              onPressed: _isChecking ? null : () => _checkForUpdates(false),
+              onPressed: _isChecking ? null : () => _checkForUpdates(true),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurpleAccent,
                 padding: const EdgeInsets.symmetric(

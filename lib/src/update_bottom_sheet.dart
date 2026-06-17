@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ota_update/ota_update.dart';
 
-import 'config.dart';
+import 'theme.dart';
 import 'update_logic.dart';
 
 class UpdateBottomSheet extends StatefulWidget {
-  final UpdateCheckerConfig config;
+  final String githubRepo;
+  final String? androidProviderAuthority;
+  final UpdateCheckerThemeData themeData;
   final String latestVersion;
   final String? downloadUrl;
   final String releaseNotes;
@@ -15,7 +17,9 @@ class UpdateBottomSheet extends StatefulWidget {
 
   const UpdateBottomSheet({
     super.key,
-    required this.config,
+    required this.githubRepo,
+    this.androidProviderAuthority,
+    required this.themeData,
     required this.latestVersion,
     this.downloadUrl,
     required this.releaseNotes,
@@ -33,12 +37,17 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
   late String _statusMessage;
   StreamSubscription<OtaEvent>? _otaSubscription;
   late final UpdateLogic _updateLogic;
+  late final _ResolvedStrings _strings;
 
   @override
   void initState() {
     super.initState();
-    _updateLogic = UpdateLogic(widget.config);
-    _statusMessage = widget.config.bottomSheetStrings.readyToDownload;
+    _updateLogic = UpdateLogic(
+      githubRepo: widget.githubRepo,
+      androidProviderAuthority: widget.androidProviderAuthority,
+    );
+    _strings = _ResolvedStrings.resolve(widget.themeData);
+    _statusMessage = _strings.readyToDownload;
   }
 
   @override
@@ -48,10 +57,9 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
   }
 
   void _startDownload() {
-    final strings = widget.config.bottomSheetStrings;
     setState(() {
       _isDownloading = true;
-      _statusMessage = strings.startingDownload;
+      _statusMessage = _strings.startingDownload;
     });
 
     try {
@@ -65,40 +73,40 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
                   case OtaStatus.DOWNLOADING:
                     _progress = double.tryParse(event.value ?? "0") ?? 0;
                     _statusMessage =
-                        "${strings.downloadingPrefix}: ${_progress.toInt()}%";
+                        "${_strings.downloadingPrefix}: ${_progress.toInt()}%";
                     break;
                   case OtaStatus.INSTALLING:
-                    _statusMessage = strings.installingUpdate;
+                    _statusMessage = _strings.installingUpdate;
                     break;
                   case OtaStatus.INSTALLATION_DONE:
-                    _statusMessage = strings.updateInstalled;
+                    _statusMessage = _strings.updateInstalled;
                     _isDownloading = false;
                     break;
                   case OtaStatus.INSTALLATION_ERROR:
-                    _statusMessage = strings.installationFailed;
+                    _statusMessage = _strings.installationFailed;
                     _isDownloading = false;
                     break;
                   case OtaStatus.CHECKSUM_ERROR:
-                    _statusMessage = strings.checksumError;
+                    _statusMessage = _strings.checksumError;
                     _isDownloading = false;
                     break;
                   case OtaStatus.PERMISSION_NOT_GRANTED_ERROR:
-                    _statusMessage = strings.permissionDenied;
+                    _statusMessage = _strings.permissionDenied;
                     _isDownloading = false;
                     break;
                   case OtaStatus.INTERNAL_ERROR:
-                    _statusMessage = strings.internalError;
+                    _statusMessage = _strings.internalError;
                     _isDownloading = false;
                     break;
                   case OtaStatus.DOWNLOAD_ERROR:
-                    _statusMessage = strings.downloadError;
+                    _statusMessage = _strings.downloadError;
                     _isDownloading = false;
                     break;
                   case OtaStatus.ALREADY_RUNNING_ERROR:
-                    _statusMessage = strings.alreadyRunningError;
+                    _statusMessage = _strings.alreadyRunningError;
                     break;
                   default:
-                    _statusMessage = strings.unknownError;
+                    _statusMessage = _strings.unknownError;
                     _isDownloading = false;
                     break;
                 }
@@ -106,14 +114,14 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
             },
             onError: (e) {
               setState(() {
-                _statusMessage = "${strings.downloadError}: $e";
+                _statusMessage = "${_strings.downloadError}: $e";
                 _isDownloading = false;
               });
             },
           );
     } catch (e) {
       setState(() {
-        _statusMessage = "${strings.internalError}: $e";
+        _statusMessage = "${_strings.internalError}: $e";
         _isDownloading = false;
       });
     }
@@ -127,12 +135,12 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
       setState(() {
         _isDownloading = false;
         _progress = 0;
-        _statusMessage = widget.config.bottomSheetStrings.readyToDownload;
+        _statusMessage = _strings.readyToDownload;
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(widget.config.bottomSheetStrings.updateCancelled),
+            content: Text(_strings.updateCancelled),
           ),
         );
       }
@@ -145,14 +153,14 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
   Widget build(BuildContext context) {
     final colors = _ResolvedColors.resolve(
       context,
-      widget.config.bottomSheetColors,
+      widget.themeData,
     );
     final styles = _ResolvedStyles.resolve(
       context,
-      widget.config.bottomSheetStyles,
+      widget.themeData,
       colors,
     );
-    final strings = widget.config.bottomSheetStrings;
+    final strings = _strings;
 
     return Container(
       decoration: BoxDecoration(
@@ -250,7 +258,7 @@ class _HeaderSection extends StatelessWidget {
   final String latestVersion;
   final _ResolvedColors colors;
   final _ResolvedStyles styles;
-  final UpdateBottomSheetStrings strings;
+  final _ResolvedStrings strings;
 
   const _HeaderSection({
     required this.isUpToDate,
@@ -314,7 +322,7 @@ class _ReleaseNotesSection extends StatelessWidget {
   final String releaseNotes;
   final _ResolvedColors colors;
   final _ResolvedStyles styles;
-  final UpdateBottomSheetStrings strings;
+  final _ResolvedStrings strings;
 
   const _ReleaseNotesSection({
     required this.releaseNotes,
@@ -405,7 +413,7 @@ class _ActionsSection extends StatelessWidget {
   final VoidCallback onUpdate;
   final _ResolvedColors colors;
   final _ResolvedStyles styles;
-  final UpdateBottomSheetStrings strings;
+  final _ResolvedStrings strings;
 
   const _ActionsSection({
     required this.isUpToDate,
@@ -506,7 +514,7 @@ class _ResolvedColors {
 
   factory _ResolvedColors.resolve(
     BuildContext context,
-    UpdateBottomSheetColors custom,
+    UpdateCheckerThemeData custom,
   ) {
     final theme = Theme.of(context);
     final txtColor =
@@ -568,15 +576,15 @@ class _ResolvedStyles {
 
   factory _ResolvedStyles.resolve(
     BuildContext context,
-    UpdateBottomSheetStyles custom,
+    UpdateCheckerThemeData custom,
     _ResolvedColors colors,
   ) {
     return _ResolvedStyles(
-      updateIcon: custom.updateIcon,
-      upToDateIcon: custom.upToDateIcon,
-      borderRadius: custom.borderRadius,
-      padding: custom.padding,
-      buttonBorderRadius: custom.buttonBorderRadius,
+      updateIcon: custom.updateIcon ?? Icons.system_update_alt_rounded,
+      upToDateIcon: custom.upToDateIcon ?? Icons.check_circle_outline_rounded,
+      borderRadius: custom.borderRadius ?? 35.0,
+      padding: custom.padding ?? const EdgeInsets.fromLTRB(24, 32, 24, 32),
+      buttonBorderRadius: custom.buttonBorderRadius ?? 50.0,
       titleStyle: custom.titleStyle ??
           TextStyle(
             color: colors.textColor,
@@ -607,10 +615,90 @@ class _ResolvedStyles {
           TextStyle(
             color: colors.textColor,
           ),
-      noInternetIcon: custom.noInternetIcon,
-      showHandle: custom.showHandle,
-      showBorder: custom.showBorder,
-      borderWidth: custom.borderWidth,
+      noInternetIcon: custom.noInternetIcon ?? Icons.wifi_off_rounded,
+      showHandle: custom.showHandle ?? true,
+      showBorder: custom.showBorder ?? false,
+      borderWidth: custom.borderWidth ?? 1.0,
+    );
+  }
+}
+
+class _ResolvedStrings {
+  final String updateAvailableTitle;
+  final String upToDateTitle;
+  final String versionPrefix;
+  final String upToDateMessage;
+  final String whatsNewLabel;
+  final String notNowButton;
+  final String updateNowButton;
+  final String okayButton;
+  final String readyToDownload;
+  final String startingDownload;
+  final String downloadingPrefix;
+  final String installingUpdate;
+  final String updateInstalled;
+  final String installationFailed;
+  final String checksumError;
+  final String permissionDenied;
+  final String internalError;
+  final String downloadError;
+  final String alreadyRunningError;
+  final String unknownError;
+  final String updateCancelled;
+  final String unableToFetchTitle;
+  final String noInternetMessage;
+
+  _ResolvedStrings({
+    required this.updateAvailableTitle,
+    required this.upToDateTitle,
+    required this.versionPrefix,
+    required this.upToDateMessage,
+    required this.whatsNewLabel,
+    required this.notNowButton,
+    required this.updateNowButton,
+    required this.okayButton,
+    required this.readyToDownload,
+    required this.startingDownload,
+    required this.downloadingPrefix,
+    required this.installingUpdate,
+    required this.updateInstalled,
+    required this.installationFailed,
+    required this.checksumError,
+    required this.permissionDenied,
+    required this.internalError,
+    required this.downloadError,
+    required this.alreadyRunningError,
+    required this.unknownError,
+    required this.updateCancelled,
+    required this.unableToFetchTitle,
+    required this.noInternetMessage,
+  });
+
+  factory _ResolvedStrings.resolve(UpdateCheckerThemeData custom) {
+    return _ResolvedStrings(
+      updateAvailableTitle: custom.updateAvailableTitle ?? "Update Available",
+      upToDateTitle: custom.upToDateTitle ?? "Up to Date",
+      versionPrefix: custom.versionPrefix ?? "Version",
+      upToDateMessage: custom.upToDateMessage ?? "You are using the latest version",
+      whatsNewLabel: custom.whatsNewLabel ?? "What's New:",
+      notNowButton: custom.notNowButton ?? "Not Now",
+      updateNowButton: custom.updateNowButton ?? "Update Now",
+      okayButton: custom.okayButton ?? "Okay",
+      readyToDownload: custom.readyToDownload ?? "Ready to download",
+      startingDownload: custom.startingDownload ?? "Starting download...",
+      downloadingPrefix: custom.downloadingPrefix ?? "Downloading",
+      installingUpdate: custom.installingUpdate ?? "Installing update...",
+      updateInstalled: custom.updateInstalled ?? "Update installed.",
+      installationFailed: custom.installationFailed ?? "Installation failed.",
+      checksumError: custom.checksumError ?? "Checksum error. Try again later.",
+      permissionDenied: custom.permissionDenied ?? "Permission not granted.",
+      internalError: custom.internalError ?? "An internal error occurred.",
+      downloadError: custom.downloadError ?? "File could not be downloaded.",
+      alreadyRunningError: custom.alreadyRunningError ?? "An update is already in progress.",
+      unknownError: custom.unknownError ?? "Something went wrong.",
+      updateCancelled: custom.updateCancelled ?? "Update cancelled",
+      unableToFetchTitle: custom.unableToFetchTitle ?? "Unable to Fetch",
+      noInternetMessage: custom.noInternetMessage ?? "Please check your internet connection and try again.",
     );
   }
 }

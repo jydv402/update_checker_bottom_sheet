@@ -6,13 +6,15 @@ import 'package:ota_update/ota_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'config.dart';
 import 'utils.dart';
 
 /// Orchestrates the logic for checking updates and triggering the OTA installation.
 class UpdateLogic {
-  /// The configuration object containing repository details and UI preferences.
-  final UpdateCheckerConfig config;
+  /// The GitHub repository to check for releases.
+  final String githubRepo;
+
+  /// The Android Provider Authority used by ota_update.
+  final String? androidProviderAuthority;
 
   /// Base URL for the GitHub API.
   static const String githubApiBase = "https://api.github.com/repos";
@@ -21,8 +23,11 @@ class UpdateLogic {
   static const String defaultProviderSuffix =
       ".update_checker_bottom_sheet.provider";
 
-  /// Initializes the update logic with the given [config].
-  UpdateLogic(this.config);
+  /// Initializes the update logic with the given repository and authority.
+  UpdateLogic({
+    required this.githubRepo,
+    this.androidProviderAuthority,
+  });
 
   /// Fetches the latest release data from the GitHub API.
   ///
@@ -30,7 +35,7 @@ class UpdateLogic {
   Future<Map<String, dynamic>?> getLatestGitHubRelease() async {
     try {
       final response = await http.get(
-        Uri.parse("$githubApiBase/${config.githubRepo}/releases/latest"),
+        Uri.parse("$githubApiBase/$githubRepo/releases/latest"),
       );
 
       if (response.statusCode == 200) {
@@ -84,7 +89,7 @@ class UpdateLogic {
   Stream<OtaEvent> startOtaUpdate(String url) {
     return Stream.fromFuture(PackageInfo.fromPlatform()).asyncExpand((info) {
       final authority =
-          config.androidProviderAuthority ??
+          androidProviderAuthority ??
           "${info.packageName}$defaultProviderSuffix";
       return OtaUpdate().execute(url, androidProviderAuthority: authority);
     });
