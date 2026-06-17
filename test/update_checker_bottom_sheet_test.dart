@@ -50,13 +50,11 @@ void main() {
 
     test('UpdateChecker.theme assignment', () {
       expect(UpdateChecker.theme, null);
-      
-      const theme = UpdateCheckerThemeData(
-        backgroundColor: Colors.yellow,
-      );
+
+      const theme = UpdateCheckerThemeData(backgroundColor: Colors.yellow);
       UpdateChecker.theme = theme;
       expect(UpdateChecker.theme?.backgroundColor, Colors.yellow);
-      
+
       // Reset
       UpdateChecker.theme = null;
     });

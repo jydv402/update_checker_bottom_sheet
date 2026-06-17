@@ -24,10 +24,7 @@ class UpdateLogic {
       ".update_checker_bottom_sheet.provider";
 
   /// Initializes the update logic with the given repository and authority.
-  UpdateLogic({
-    required this.githubRepo,
-    this.androidProviderAuthority,
-  });
+  UpdateLogic({required this.githubRepo, this.androidProviderAuthority});
 
   /// Fetches the latest release data from the GitHub API.
   ///
