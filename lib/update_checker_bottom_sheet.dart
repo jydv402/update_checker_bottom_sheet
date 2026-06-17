@@ -17,6 +17,9 @@ class UpdateChecker {
   // Static constructor to prevent instantiation.
   const UpdateChecker._();
 
+  /// Global theme configuration for all update check sheets.
+  static UpdateCheckerThemeData? theme;
+
   /// Checks for updates and triggers the bottom sheet UI if needed.
   ///
   /// returns `true` if the update UI was displayed, and `false` otherwise.
@@ -87,7 +90,6 @@ class UpdateChecker {
     final bool hasInternet = await UpdateUtils.hasInternet();
 
     // Resolve themes
-    final inheritedTheme = UpdateCheckerTheme.of(context);
     final localTheme = UpdateCheckerThemeData(
       backgroundColor: backgroundColor,
       textColor: textColor,
@@ -137,7 +139,7 @@ class UpdateChecker {
       noInternetMessage: noInternetMessage,
     );
 
-    final mergedTheme = inheritedTheme?.mergeWith(localTheme) ?? localTheme;
+    final mergedTheme = theme?.mergeWith(localTheme) ?? localTheme;
 
     if (!hasInternet) {
       if (showIfUpToDate && context.mounted) {

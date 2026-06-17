@@ -47,5 +47,18 @@ void main() {
       // New property
       expect(merged.updateAvailableTitle, 'New Update');
     });
+
+    test('UpdateChecker.theme assignment', () {
+      expect(UpdateChecker.theme, null);
+      
+      const theme = UpdateCheckerThemeData(
+        backgroundColor: Colors.yellow,
+      );
+      UpdateChecker.theme = theme;
+      expect(UpdateChecker.theme?.backgroundColor, Colors.yellow);
+      
+      // Reset
+      UpdateChecker.theme = null;
+    });
   });
 }

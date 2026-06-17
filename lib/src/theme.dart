@@ -162,20 +162,4 @@ class UpdateCheckerThemeData {
   }
 }
 
-/// An [InheritedWidget] to define global [UpdateCheckerThemeData] settings.
-class UpdateCheckerTheme extends InheritedWidget {
-  final UpdateCheckerThemeData data;
 
-  const UpdateCheckerTheme({
-    super.key,
-    required this.data,
-    required super.child,
-  });
-
-  static UpdateCheckerThemeData? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<UpdateCheckerTheme>()?.data;
-  }
-
-  @override
-  bool updateShouldNotify(UpdateCheckerTheme oldWidget) => data != oldWidget.data;
-}

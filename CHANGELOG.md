@@ -2,11 +2,15 @@
 
 * **Singular Static Entry Point**: Unified the check process under the singular static method `UpdateChecker.check(...)`. Removed the stateful widget wrapper for a cleaner, native-like Flutter development experience.
 * **Flattened Parameters**: Replaced all nested configuration classes (`UpdateCheckerConfig`, `UpdateBottomSheetColors`, etc.) with simple, flat optional parameters directly on `UpdateChecker.check(...)`.
-* **Global Theming Support**: Introduced `UpdateCheckerTheme` (`InheritedWidget`) and `UpdateCheckerThemeData` to configure styles, colors, and strings globally once.
+* **Global Theming Support**: Introduced the static `UpdateChecker.theme` property using `UpdateCheckerThemeData` to configure styles, colors, and strings globally without widget wrapping.
 * **Network Error Mismatch Fix**: Fixed a bug where the "Unable to Fetch" bottom sheet was displayed on internet failure even when `showIfUpToDate` was set to `false`.
 * **Decoupled Architecture**: Separated the core logic of check and update (`UpdateLogic`) from presentation and style parameters.
 
 ## 0.0.5
+
+* **Internet availability check**: Added native logic for checking if the device has internet connectivity before checking for updates.
+* **No internet UI**: Added a new bottom sheet UI for displaying a no internet message when the device has no internet connectivity.
+* **Internal updates**: Improved internal documentation with comprehensive `dartdoc` comments for all public and internal classes.
 
 ## 0.0.4
 

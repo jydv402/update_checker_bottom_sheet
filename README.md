@@ -14,6 +14,7 @@ A simple and customizable Flutter package to check for app updates via **GitHub 
 - [Android Setup](#-android-setup)
 - [Usage](#-usage)
 - [Customization](#-customization)
+- [Migration Guide (0.0.5 to 0.0.6)](#-migration-guide)
 - [GitHub Release Best Practices (Important)](#-github-release-best-practices-important)
 - [Note on Versioning (Important)](#-note-on-versioning-important)
 - [License](#-license)
@@ -55,7 +56,7 @@ Add this package to your `pubspec.yaml` via **pub.dev**:
 
 ```yaml
 dependencies:
-  update_checker_bottom_sheet: ^0.0.5
+  update_checker_bottom_sheet: ^0.0.6
 ```
 
 Or Run
@@ -105,11 +106,9 @@ Automatically checks GitHub and shows the sheet only if an update is found.
 import 'package:update_checker_bottom_sheet/update_checker_bottom_sheet.dart';
 
 void _checkForUpdates() async {
-  await UpdateCheckerBottomSheet.checkAndUpdate(
+  await UpdateChecker.check(
     context,
-    config: const UpdateCheckerConfig(
-      githubRepo: "username/repo", // e.g. "jydv402/memno"
-    ),
+    githubRepo: "username/repo", // e.g. "jydv402/memno"
   );
 }
 ```
@@ -118,15 +117,15 @@ void _checkForUpdates() async {
 Useful for "Check for Updates" buttons in a Settings menu.
 
 ```dart
-await UpdateCheckerBottomSheet.checkAndUpdate(
+await UpdateChecker.check(
   context,
   showIfUpToDate: true, // Shows "You are using the latest version" if no update
-  config: const UpdateCheckerConfig(githubRepo: "username/repo"),
+  githubRepo: "username/repo",
 );
 ```
 
 ### ⚠️ Important: Cleaning Up Old APK Files
-The `checkAndUpdate` function automatically cleans up old APK files from previous downloads to save storage space on the user's device. This ensures a smooth user experience without cluttering the device with temporary files.
+The `check` function automatically cleans up old APK files from previous downloads to save storage space on the user's device. This ensures a smooth user experience without cluttering the device with temporary files.
 
 👉 **[View the Sample Implementation](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/IMPLEMENTATION.md)**
 
@@ -137,6 +136,14 @@ The `checkAndUpdate` function automatically cleans up old APK files from previou
 We believe in deep customization. You can control every pixel, color, and string used in the bottom sheet.
 
 👉 **[View the Full Customization Guide](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/CUSTOMIZATION.md)**
+
+---
+
+## 🔄 Migration Guide
+
+Upgrading from `0.0.5` to `0.0.6` contains breaking changes (renaming class/methods and flattening customization parameters).
+
+👉 **[View the Migration Guide](https://github.com/jydv402/update_checker_bottom_sheet/blob/main/MIGRATION.md)**
 
 ---
 
