@@ -1,6 +1,6 @@
 name: update_checker_bottom_sheet
 description: A simple and customizable Flutter package to check for app updates via GitHub Releases, with built-in OTA downloading and installation support for Android.
-version: 0.0.6
+version: 0.0.7
 repository: https://github.com/jydv402/update_checker_bottom_sheet
 homepage: https://github.com/jydv402/update_checker_bottom_sheet
 issue_tracker: https://github.com/jydv402/update_checker_bottom_sheet/issues
@@ -27,10 +27,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_markdown: ^0.7.7+1
   http: ^1.6.0
   ota_update: ^7.1.0
   package_info_plus: ^10.1.0
   path_provider: ^2.1.5
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

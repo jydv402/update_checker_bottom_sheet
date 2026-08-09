@@ -139,6 +139,7 @@ class ResolvedStrings {
   final String whatsNewLabel;
   final String notNowButton;
   final String updateNowButton;
+  final String redirectButton;
   final String okayButton;
   final String readyToDownload;
   final String startingDownload;
@@ -164,6 +165,7 @@ class ResolvedStrings {
     required this.whatsNewLabel,
     required this.notNowButton,
     required this.updateNowButton,
+    required this.redirectButton,
     required this.okayButton,
     required this.readyToDownload,
     required this.startingDownload,
@@ -192,6 +194,7 @@ class ResolvedStrings {
       whatsNewLabel: custom.whatsNewLabel ?? "What's New:",
       notNowButton: custom.notNowButton ?? "Not Now",
       updateNowButton: custom.updateNowButton ?? "Update Now",
+      redirectButton: custom.redirectButton ?? "Open Release Page",
       okayButton: custom.okayButton ?? "Okay",
       readyToDownload: custom.readyToDownload ?? "Ready to download",
       startingDownload: custom.startingDownload ?? "Starting download...",

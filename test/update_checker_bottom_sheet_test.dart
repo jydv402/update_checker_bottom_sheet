@@ -58,5 +58,10 @@ void main() {
       // Reset
       UpdateChecker.theme = null;
     });
+
+    test('Default update style is bottom sheet', () {
+      expect(UpdateCheckerStyle.bottomSheet.index, 0);
+      expect(UpdateCheckerStyle.alertDialog.index, 1);
+    });
   });
 }

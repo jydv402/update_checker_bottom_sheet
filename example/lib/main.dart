@@ -69,9 +69,14 @@ class _HomePageState extends State<HomePage> {
     // We use the static check method to trigger the process.
     final updateFound = await UpdateChecker.check(
       context,
+      style: UpdateCheckerStyle.bottomSheet,
       githubRepo: "jydv402/memno",
+      // Whether to provide haptics feedback.
+      enableHaptics: true,
       // Whether to show the bottom sheet even if the app is up to date.
       showIfUpToDate: showIfUpToDate,
+      // Whether to show a button that redirects to the GitHub repository.
+      showRedirectButton: false,
       // Define all custom colors for the UI.
       backgroundColor: const Color(0xFF0F0F0F),
       textColor: Colors.white,
@@ -131,7 +136,7 @@ class _HomePageState extends State<HomePage> {
       downloadError: "Network connection lost.",
       alreadyRunningError: "Another update is active.",
       unknownError: "An unexpected error occurred.",
-      updateCancelled: "Download paused/cancelled.",
+      updateCancelled: "Download cancelled.",
       unableToFetchTitle: "Check Connection",
       noInternetMessage: "Please verify your internet and try again.",
     );

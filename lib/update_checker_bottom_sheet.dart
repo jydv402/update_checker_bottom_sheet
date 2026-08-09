@@ -8,6 +8,15 @@ import 'src/update_bottom_sheet.dart';
 
 export 'src/theme.dart';
 
+/// Presentation styles supported by the update checker.
+enum UpdateCheckerStyle {
+  /// Shows the update UI as a bottom sheet.
+  bottomSheet,
+
+  /// Shows the update UI as an alert dialog.
+  alertDialog,
+}
+
 /// The main entry point for the Update Checker package.
 ///
 /// This provides a singular static method [UpdateChecker.check] to trigger an update check:
@@ -20,13 +29,55 @@ class UpdateChecker {
   /// Global theme configuration for all update check sheets.
   static UpdateCheckerThemeData? theme;
 
-  /// Checks for updates and triggers the bottom sheet UI if needed.
+  static Widget _buildUpdateDialog({
+    required String githubRepo,
+    required String? androidProviderAuthority,
+    required UpdateCheckerThemeData themeData,
+    required String latestVersion,
+    required String? downloadUrl,
+    required String releaseNotes,
+    required bool isUpToDate,
+    required bool showNetworkError,
+    required bool enableHaptics,
+    required bool showRedirectButton,
+  }) {
+    final dialogTheme = themeData.mergeWith(
+      const UpdateCheckerThemeData(
+        showHandle: false,
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+        borderRadius: 24,
+      ),
+    );
+
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      child: UpdateBottomSheet(
+        githubRepo: githubRepo,
+        androidProviderAuthority: androidProviderAuthority,
+        themeData: dialogTheme,
+        latestVersion: latestVersion,
+        downloadUrl: downloadUrl,
+        releaseNotes: releaseNotes,
+        isUpToDate: isUpToDate,
+        showNetworkError: showNetworkError,
+        isDialogStyle: true,
+        enableHaptics: enableHaptics,
+        showRedirectButton: showRedirectButton,
+      ),
+    );
+  }
+
+  /// Checks for updates and triggers the update UI if needed.
   ///
   /// returns `true` if the update UI was displayed, and `false` otherwise.
   static Future<bool> check(
     BuildContext context, {
     required String githubRepo,
+    UpdateCheckerStyle style = UpdateCheckerStyle.bottomSheet,
     bool showIfUpToDate = true,
+    bool enableHaptics = false,
+    bool showRedirectButton = false,
     String? androidProviderAuthority,
     Color? backgroundColor,
     Color? textColor,
@@ -143,19 +194,42 @@ class UpdateChecker {
 
     if (!hasInternet) {
       if (showIfUpToDate && context.mounted) {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (context) => UpdateBottomSheet(
-            githubRepo: githubRepo,
-            androidProviderAuthority: androidProviderAuthority,
-            themeData: mergedTheme,
-            latestVersion: "",
-            releaseNotes: "",
-            showNetworkError: true,
-          ),
-        );
+        switch (style) {
+          case UpdateCheckerStyle.bottomSheet:
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => UpdateBottomSheet(
+                githubRepo: githubRepo,
+                androidProviderAuthority: androidProviderAuthority,
+                themeData: mergedTheme,
+                latestVersion: "",
+                releaseNotes: "",
+                showNetworkError: true,
+                enableHaptics: enableHaptics,
+                showRedirectButton: showRedirectButton,
+              ),
+            );
+            break;
+          case UpdateCheckerStyle.alertDialog:
+            showDialog(
+              context: context,
+              builder: (context) => _buildUpdateDialog(
+                githubRepo: githubRepo,
+                androidProviderAuthority: androidProviderAuthority,
+                themeData: mergedTheme,
+                latestVersion: "",
+                downloadUrl: null,
+                releaseNotes: "",
+                isUpToDate: true,
+                showNetworkError: true,
+                enableHaptics: enableHaptics,
+                showRedirectButton: showRedirectButton,
+              ),
+            );
+            break;
+        }
         return true;
       }
       return false;
@@ -169,20 +243,43 @@ class UpdateChecker {
 
     if (isUpdateAvailable || showIfUpToDate) {
       if (context.mounted) {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (context) => UpdateBottomSheet(
-            githubRepo: githubRepo,
-            androidProviderAuthority: androidProviderAuthority,
-            themeData: mergedTheme,
-            latestVersion: updateData['latestVersion'],
-            downloadUrl: updateData['url'],
-            releaseNotes: updateData['notes'],
-            isUpToDate: !isUpdateAvailable,
-          ),
-        );
+        switch (style) {
+          case UpdateCheckerStyle.bottomSheet:
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => UpdateBottomSheet(
+                githubRepo: githubRepo,
+                androidProviderAuthority: androidProviderAuthority,
+                themeData: mergedTheme,
+                latestVersion: updateData['latestVersion'],
+                downloadUrl: updateData['url'],
+                releaseNotes: updateData['notes'],
+                isUpToDate: !isUpdateAvailable,
+                enableHaptics: enableHaptics,
+                showRedirectButton: showRedirectButton,
+              ),
+            );
+            break;
+          case UpdateCheckerStyle.alertDialog:
+            showDialog(
+              context: context,
+              builder: (context) => _buildUpdateDialog(
+                githubRepo: githubRepo,
+                androidProviderAuthority: androidProviderAuthority,
+                themeData: mergedTheme,
+                latestVersion: updateData['latestVersion'],
+                downloadUrl: updateData['url'],
+                releaseNotes: updateData['notes'],
+                isUpToDate: !isUpdateAvailable,
+                showNetworkError: false,
+                enableHaptics: enableHaptics,
+                showRedirectButton: showRedirectButton,
+              ),
+            );
+            break;
+        }
         return true;
       }
     }

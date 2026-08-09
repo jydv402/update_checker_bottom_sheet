@@ -3,7 +3,7 @@
 [![Pub Version](https://img.shields.io/pub/v/update_checker_bottom_sheet?color=blue)](https://pub.dev/packages/update_checker_bottom_sheet)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A simple and customizable Flutter package to check for app updates via **GitHub Releases**. It provides a beautiful, user-friendly bottom sheet that handles version comparison, OTA downloading, and installation on Android.
+A simple and customizable Flutter package to check for app updates via **GitHub Releases**. It provides a beautiful, user-friendly update UI that can be shown as either a bottom sheet or an alert dialog, handling version comparison, OTA downloading, and installation on Android.
 
 ---
 
@@ -56,7 +56,7 @@ Add this package to your `pubspec.yaml` via **pub.dev**:
 
 ```yaml
 dependencies:
-  update_checker_bottom_sheet: ^0.0.6
+  update_checker_bottom_sheet: ^0.0.7
 ```
 
 Or Run
@@ -111,6 +111,28 @@ void _checkForUpdates() async {
     githubRepo: "username/repo", // e.g. "jydv402/memno"
   );
 }
+```
+
+### Alert Dialog Style
+Choose a dialog-based presentation instead of the default bottom sheet.
+
+```dart
+await UpdateChecker.check(
+  context,
+  githubRepo: "username/repo",
+  style: UpdateCheckerStyle.alertDialog,
+);
+```
+
+### Optional repository redirect button
+Open the latest GitHub release page directly from the update UI.
+
+```dart
+await UpdateChecker.check(
+  context,
+  githubRepo: "username/repo",
+  showRedirectButton: true,
+);
 ```
 
 ### Force "Up to Date" UI

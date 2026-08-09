@@ -39,6 +39,7 @@ class UpdateCheckerThemeData {
   final String? whatsNewLabel;
   final String? notNowButton;
   final String? updateNowButton;
+  final String? redirectButton;
   final String? okayButton;
   final String? readyToDownload;
   final String? startingDownload;
@@ -88,6 +89,7 @@ class UpdateCheckerThemeData {
     this.whatsNewLabel,
     this.notNowButton,
     this.updateNowButton,
+    this.redirectButton,
     this.okayButton,
     this.readyToDownload,
     this.startingDownload,

@@ -20,6 +20,9 @@ class UpdateBottomSheet extends StatefulWidget {
   final String releaseNotes;
   final bool isUpToDate;
   final bool showNetworkError;
+  final bool isDialogStyle;
+  final bool enableHaptics;
+  final bool showRedirectButton;
 
   const UpdateBottomSheet({
     super.key,
@@ -31,6 +34,9 @@ class UpdateBottomSheet extends StatefulWidget {
     required this.releaseNotes,
     this.isUpToDate = false,
     this.showNetworkError = false,
+    this.isDialogStyle = false,
+    this.enableHaptics = false,
+    this.showRedirectButton = false,
   });
 
   @override
@@ -159,28 +165,36 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
     final styles = ResolvedStyles.resolve(context, widget.themeData, colors);
     final strings = _strings;
 
+    final borderRadius = widget.isDialogStyle
+        ? BorderRadius.circular(styles.borderRadius)
+        : BorderRadius.vertical(top: Radius.circular(styles.borderRadius));
+
+    final border = widget.isDialogStyle
+        ? (styles.showBorder
+              ? Border.all(color: colors.borderColor, width: styles.borderWidth)
+              : null)
+        : (styles.showBorder
+              ? Border(
+                  top: BorderSide(
+                    color: colors.borderColor,
+                    width: styles.borderWidth,
+                  ),
+                  left: BorderSide(
+                    color: colors.borderColor,
+                    width: styles.borderWidth,
+                  ),
+                  right: BorderSide(
+                    color: colors.borderColor,
+                    width: styles.borderWidth,
+                  ),
+                )
+              : null);
+
     return Container(
       decoration: BoxDecoration(
         color: colors.backgroundColor,
-        border: styles.showBorder
-            ? Border(
-                top: BorderSide(
-                  color: colors.borderColor,
-                  width: styles.borderWidth,
-                ),
-                left: BorderSide(
-                  color: colors.borderColor,
-                  width: styles.borderWidth,
-                ),
-                right: BorderSide(
-                  color: colors.borderColor,
-                  width: styles.borderWidth,
-                ),
-              )
-            : null,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(styles.borderRadius),
-        ),
+        border: border,
+        borderRadius: borderRadius,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -223,12 +237,13 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
                     strings: strings,
                   ),
                 ],
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 if (_isDownloading)
                   ProgressSection(
                     progress: _progress,
                     statusMessage: _statusMessage,
                     onCancel: _cancelDownload,
+                    enableHaptics: widget.enableHaptics,
                     colors: colors,
                     styles: styles,
                   )
@@ -236,6 +251,9 @@ class _UpdateBottomSheetState extends State<UpdateBottomSheet> {
                   ActionsSection(
                     isUpToDate: widget.isUpToDate || widget.showNetworkError,
                     onUpdate: _startDownload,
+                    enableHaptics: widget.enableHaptics,
+                    showRedirectButton: widget.showRedirectButton,
+                    githubRepo: widget.githubRepo,
                     colors: colors,
                     styles: styles,
                     strings: strings,

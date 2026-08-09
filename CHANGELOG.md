@@ -1,4 +1,10 @@
-# 0.0.6
+# 0.0.7
+
+* **Dual Presentation Styles**: Added an optional `style` parameter to `UpdateChecker.check(...)` so updates can be shown as either a bottom sheet or an alert dialog while keeping the bottom sheet as the default.
+* **Markdown Release Notes**: Enabled Markdown rendering for the release notes box so GitHub release descriptions with headings, lists, and emphasis display correctly in the update UI.
+* **Haptic Feedback Support**: Added support for enabling haptic feedback in the update checker buttons. Controlled via the boolean flag `enableHaptics`.
+
+## 0.0.6
 
 * **Singular Static Entry Point**: Unified the check process under the singular static method `UpdateChecker.check(...)`. Removed the stateful widget wrapper for a cleaner, native-like Flutter development experience.
 * **Flattened Parameters**: Replaced all nested configuration classes (`UpdateCheckerConfig`, `UpdateBottomSheetColors`, etc.) with simple, flat optional parameters directly on `UpdateChecker.check(...)`.

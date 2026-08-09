@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../src/theme_resolver.dart';
 
@@ -18,6 +19,27 @@ class ReleaseNotesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final markdownStyle = MarkdownStyleSheet.fromTheme(Theme.of(context))
+        .copyWith(
+          p: styles.contentStyle,
+          h1: styles.whatsNewStyle,
+          h2: styles.whatsNewStyle,
+          h3: styles.whatsNewStyle,
+          listBullet: styles.contentStyle,
+          listBulletPadding: const EdgeInsets.only(left: 8),
+          blockSpacing: 8,
+          code: styles.contentStyle.copyWith(
+            fontFamily: 'monospace',
+            backgroundColor: colors.pillColor,
+          ),
+          codeblockPadding: const EdgeInsets.all(12),
+          codeblockDecoration: BoxDecoration(
+            color: colors.pillColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          a: styles.contentStyle.copyWith(color: colors.accentColor),
+        );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -32,7 +54,11 @@ class ReleaseNotesSection extends StatelessWidget {
           ),
           constraints: const BoxConstraints(maxHeight: 150),
           child: SingleChildScrollView(
-            child: Text(releaseNotes, style: styles.contentStyle),
+            child: MarkdownBody(
+              data: releaseNotes,
+              styleSheet: markdownStyle,
+              softLineBreak: true,
+            ),
           ),
         ),
       ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../src/theme_resolver.dart';
 
@@ -6,6 +7,7 @@ class ProgressSection extends StatelessWidget {
   final double progress;
   final String statusMessage;
   final VoidCallback onCancel;
+  final bool enableHaptics;
   final ResolvedColors colors;
   final ResolvedStyles styles;
 
@@ -14,6 +16,7 @@ class ProgressSection extends StatelessWidget {
     required this.progress,
     required this.statusMessage,
     required this.onCancel,
+    this.enableHaptics = false,
     required this.colors,
     required this.styles,
   });
@@ -35,7 +38,12 @@ class ProgressSection extends StatelessWidget {
           children: [
             Expanded(child: Text(statusMessage, style: styles.contentStyle)),
             TextButton(
-              onPressed: onCancel,
+              onPressed: () {
+                if (enableHaptics) {
+                  HapticFeedback.lightImpact();
+                }
+                onCancel();
+              },
               child: const Text("Cancel", style: TextStyle(color: Colors.red)),
             ),
           ],
